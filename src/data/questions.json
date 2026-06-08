@@ -1,0 +1,578 @@
+{
+  "topics": [
+    {
+      "id": "core-java",
+      "title": "Core Java",
+      "icon": "☕",
+      "color": "#f89820",
+      "description": "Fundamentals, OOP, Collections, Multithreading",
+      "sections": [
+        {
+          "id": "oops",
+          "title": "OOP Concepts",
+          "questions": [
+            {
+              "id": "cj-1",
+              "question": "What are the four pillars of Object-Oriented Programming?",
+              "answer": "The four pillars are Encapsulation (bundling data and methods, hiding internal state), Inheritance (a class acquiring properties of another class), Polymorphism (one interface, many implementations — compile-time via overloading, runtime via overriding), and Abstraction (hiding complex implementation, showing only essentials via abstract classes or interfaces)."
+            },
+            {
+              "id": "cj-2",
+              "question": "What is the difference between an abstract class and an interface in Java?",
+              "answer": "An abstract class can have both abstract and concrete methods, instance variables, constructors, and can extend only one class. An interface (Java 8+) can have abstract methods, default methods, static methods, and constants. A class can implement multiple interfaces but extend only one abstract class. Use abstract class for shared base behavior; use interface for defining a contract."
+            },
+            {
+              "id": "cj-3",
+              "question": "Explain method overloading vs method overriding.",
+              "answer": "Overloading is compile-time polymorphism — same method name, different parameters in the same class. Overriding is runtime polymorphism — subclass provides a specific implementation of a method already defined in its superclass. Overriding requires same method signature, and the @Override annotation is best practice. Overriding cannot reduce visibility or throw new checked exceptions."
+            },
+            {
+              "id": "cj-4",
+              "question": "What is the 'super' keyword in Java?",
+              "answer": "The 'super' keyword refers to the immediate parent class. It is used to call the parent class constructor (super()), access parent class methods (super.methodName()), and access parent class fields when they are hidden by child class fields. super() must be the first statement in a constructor."
+            },
+            {
+              "id": "cj-5",
+              "question": "What is a constructor and what are its types?",
+              "answer": "A constructor is a special method with the same name as the class, no return type, called when an object is created. Types: Default constructor (no-arg, compiler provides if none defined), Parameterized constructor (takes arguments to initialize fields), Copy constructor (takes an object of same class and copies values — not built-in in Java but can be written manually)."
+            }
+          ]
+        },
+        {
+          "id": "collections",
+          "title": "Collections Framework",
+          "questions": [
+            {
+              "id": "cj-6",
+              "question": "What is the difference between ArrayList and LinkedList?",
+              "answer": "ArrayList uses a dynamic array, providing O(1) random access but O(n) insertion/deletion in the middle. LinkedList uses a doubly-linked list, providing O(n) access but O(1) insertion/deletion when you have the node reference. ArrayList is better for frequent reads; LinkedList is better for frequent insertions/deletions. ArrayList also has better cache locality and lower memory overhead."
+            },
+            {
+              "id": "cj-7",
+              "question": "How does HashMap work internally in Java?",
+              "answer": "HashMap uses an array of buckets (Node[] table). When you call put(key, value), it computes hashCode() of key, applies a secondary hash, and finds the bucket index via (n-1) & hash. If two keys land in the same bucket (collision), they form a linked list. From Java 8, when a bucket's list exceeds 8 entries, it converts to a Red-Black Tree for O(log n) performance. Default initial capacity is 16 with load factor 0.75."
+            },
+            {
+              "id": "cj-8",
+              "question": "What is the difference between HashMap, LinkedHashMap, and TreeMap?",
+              "answer": "HashMap: no ordering guarantee, O(1) average for get/put. LinkedHashMap: maintains insertion order (or access order if configured), slightly more memory. TreeMap: sorted by natural ordering or custom Comparator, O(log n) for all operations, implements NavigableMap. Use HashMap for general use, LinkedHashMap when order matters, TreeMap when sorted iteration is needed."
+            }
+          ]
+        },
+        {
+          "id": "multithreading",
+          "title": "Multithreading & Concurrency",
+          "questions": [
+            {
+              "id": "cj-9",
+              "question": "What is the difference between Thread and Runnable?",
+              "answer": "Thread is a class you extend to create a thread; Runnable is an interface you implement. Implementing Runnable is preferred because Java doesn't support multiple inheritance — your class can still extend another class. Runnable also separates the task from the thread mechanism, enabling better design. With lambdas (Java 8+), Runnable can be written as () -> { task logic }."
+            },
+            {
+              "id": "cj-10",
+              "question": "What is the volatile keyword in Java?",
+              "answer": "volatile guarantees visibility of changes to a variable across threads. Without volatile, each thread may cache a variable locally. Marking it volatile forces reads/writes to go directly to main memory. It does NOT guarantee atomicity — for compound operations (i++), use AtomicInteger or synchronized. Use volatile for flags like boolean stopFlag = true that one thread writes and others read."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "advanced-java",
+      "title": "Advanced Java",
+      "icon": "🚀",
+      "color": "#6366f1",
+      "description": "JVM Internals, Streams, Generics, Design",
+      "sections": [
+        {
+          "id": "streams",
+          "title": "Java 8+ Streams & Lambdas",
+          "questions": [
+            {
+              "id": "aj-1",
+              "question": "What is the Stream API and how does it differ from Collections?",
+              "answer": "Streams provide a functional, declarative way to process sequences of data. Unlike Collections, Streams do not store data — they are pipelines. Streams are lazy: intermediate operations (filter, map) are not executed until a terminal operation (collect, forEach, reduce) is called. Streams can be sequential or parallel. Collections are data structures; Streams are computation pipelines over data."
+            },
+            {
+              "id": "aj-2",
+              "question": "Explain the difference between map() and flatMap().",
+              "answer": "map() transforms each element to another element (one-to-one mapping). flatMap() transforms each element to a Stream and then flattens all those streams into one (one-to-many). Example: map(str -> str.split('')) gives Stream<String[]>; flatMap(str -> Arrays.stream(str.split(''))) gives Stream<String>. Use flatMap when your mapping function returns a collection or Optional."
+            },
+            {
+              "id": "aj-3",
+              "question": "What are functional interfaces and give common examples?",
+              "answer": "A functional interface has exactly one abstract method, enabling lambda expressions. Key ones: Predicate<T> (takes T, returns boolean — test()), Function<T,R> (takes T, returns R — apply()), Consumer<T> (takes T, returns void — accept()), Supplier<T> (takes nothing, returns T — get()), BiFunction<T,U,R> (takes two args), UnaryOperator<T> (Function where T==R). All are in java.util.function package."
+            }
+          ]
+        },
+        {
+          "id": "jvm",
+          "title": "JVM Internals & GC",
+          "questions": [
+            {
+              "id": "aj-4",
+              "question": "Explain the JVM memory model.",
+              "answer": "JVM memory is divided into: Heap (stores objects, divided into Young Gen — Eden + Survivor spaces — and Old Gen), Stack (per-thread, stores stack frames with local variables and method calls), Method Area / Metaspace (class metadata, static variables, constants), PC Register (per-thread, current instruction address), and Native Method Stack. Heap is GC-managed; stack is LIFO and automatically cleaned on method return."
+            },
+            {
+              "id": "aj-5",
+              "question": "What is the difference between G1GC, ZGC, and CMS?",
+              "answer": "CMS (Concurrent Mark Sweep) is low-pause but deprecated in Java 9. G1GC (default since Java 9) divides heap into regions, minimizes pause times, and is predictable — best for most applications. ZGC (Java 11+) is ultra-low-latency (sub-millisecond pauses), scales to terabyte heaps, ideal for latency-sensitive services. Shenandoah is similar to ZGC. For most microservices, G1GC is sufficient."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "spring",
+      "title": "Spring & Spring Boot",
+      "icon": "🌱",
+      "color": "#22c55e",
+      "description": "IoC, AOP, Security, Data, Boot Auto-config",
+      "sections": [
+        {
+          "id": "core-spring",
+          "title": "Spring Core & IoC",
+          "questions": [
+            {
+              "id": "sp-1",
+              "question": "What is Inversion of Control and Dependency Injection?",
+              "answer": "IoC means the framework controls the flow and object creation instead of your code. Dependency Injection is the pattern Spring uses to implement IoC — dependencies are injected (provided) by the container rather than the class creating them. Types: Constructor Injection (recommended — makes dependencies explicit and enables immutability), Setter Injection, Field Injection (@Autowired — convenient but hard to test). Spring's IoC container (ApplicationContext) manages beans and their lifecycle."
+            },
+            {
+              "id": "sp-2",
+              "question": "What are Spring Bean scopes?",
+              "answer": "Singleton (default): one instance per Spring container — shared across all requests. Prototype: new instance every time requested. Request: one instance per HTTP request (web context). Session: one instance per HTTP session. Application: one instance per ServletContext. WebSocket: one instance per WebSocket session. Singleton is most common; use Prototype for stateful beans; Request/Session for web-layer beans."
+            },
+            {
+              "id": "sp-3",
+              "question": "How does Spring Boot auto-configuration work?",
+              "answer": "Spring Boot's @EnableAutoConfiguration scans META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports. Each auto-configuration class is annotated with @Conditional annotations (like @ConditionalOnClass, @ConditionalOnMissingBean) that only activate if certain classes are on classpath or beans are absent. For example, DataSourceAutoConfiguration activates only if a JDBC driver is on classpath. This eliminates most XML/Java config boilerplate."
+            }
+          ]
+        },
+        {
+          "id": "spring-data",
+          "title": "Spring Data & JPA",
+          "questions": [
+            {
+              "id": "sp-4",
+              "question": "What is the N+1 problem and how do you solve it?",
+              "answer": "N+1 occurs when fetching N parent entities each triggers a separate query for their children, resulting in N+1 total queries. Solutions: Use JOIN FETCH in JPQL ('SELECT u FROM User u JOIN FETCH u.orders'), use @EntityGraph to specify fetch paths, use @BatchSize(size=N) for batch loading, or use DTO projections with a single query. Always analyze queries with spring.jpa.show-sql=true and Hibernate statistics in development."
+            },
+            {
+              "id": "sp-5",
+              "question": "Explain @Transactional and its propagation levels.",
+              "answer": "REQUIRED (default): joins existing transaction or creates new. REQUIRES_NEW: always creates new, suspends existing. SUPPORTS: joins if exists, else non-transactional. NOT_SUPPORTED: suspends existing. MANDATORY: must have existing. NEVER: must not have existing. NESTED: nested transaction within existing. Key gotcha: @Transactional only works on public methods called from outside the bean (due to proxy-based AOP). Self-invocation bypasses the proxy."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "databases",
+      "title": "Databases",
+      "icon": "🗄️",
+      "color": "#f59e0b",
+      "description": "SQL, Indexing, Normalization, NoSQL",
+      "sections": [
+        {
+          "id": "sql",
+          "title": "SQL & Query Optimization",
+          "questions": [
+            {
+              "id": "db-1",
+              "question": "What is the difference between clustered and non-clustered indexes?",
+              "answer": "A clustered index determines the physical order of data in the table — there can be only one per table (usually the primary key). The leaf nodes of a clustered index contain the actual data rows. A non-clustered index is a separate structure with pointers to the data rows; a table can have multiple. For read-heavy queries on specific columns, non-clustered indexes help. Covering indexes (index includes all queried columns) eliminate table lookups entirely."
+            },
+            {
+              "id": "db-2",
+              "question": "Explain ACID properties.",
+              "answer": "Atomicity: all operations in a transaction succeed or all fail — no partial commits. Consistency: a transaction brings the database from one valid state to another, respecting all constraints. Isolation: concurrent transactions execute as if sequential — isolation levels (READ UNCOMMITTED, READ COMMITTED, REPEATABLE READ, SERIALIZABLE) control how. Durability: committed transactions survive system failures, ensured by write-ahead logging (WAL)."
+            },
+            {
+              "id": "db-3",
+              "question": "What is database normalization and the normal forms?",
+              "answer": "Normalization eliminates redundancy and ensures data integrity. 1NF: atomic values, no repeating groups. 2NF: 1NF + no partial dependency (every non-key column depends on the whole primary key). 3NF: 2NF + no transitive dependency (non-key columns depend only on the key). BCNF: stricter 3NF — every determinant is a candidate key. In practice, most systems are designed to 3NF; OLAP systems may denormalize for query performance."
+            }
+          ]
+        },
+        {
+          "id": "nosql",
+          "title": "NoSQL & Redis",
+          "questions": [
+            {
+              "id": "db-4",
+              "question": "When would you choose NoSQL over SQL?",
+              "answer": "Choose NoSQL for: unstructured or semi-structured data (documents, JSON), massive horizontal scaling needs, flexible schemas that evolve rapidly, high write throughput (Cassandra), real-time analytics, or specific access patterns (wide-column, graph). Choose SQL for complex queries/joins, strong consistency requirements, ACID transactions, and well-defined relational data. In practice, many systems use both — SQL for transactional data, Redis for caching, Elasticsearch for search."
+            },
+            {
+              "id": "db-5",
+              "question": "What are Redis data structures and when do you use each?",
+              "answer": "String: simple key-value, counters, cached JSON. List: message queues, activity feeds (LPUSH/RPOP). Set: unique tags, user sessions, deduplication. Sorted Set: leaderboards, rate limiting, priority queues (score-based ordering). Hash: storing objects with multiple fields (user profile). HyperLogLog: approximate cardinality (unique visitor count). Streams: event streaming, append-only logs. Pub/Sub: real-time notifications. Bitmaps: feature flags per user ID."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "rest-microservices",
+      "title": "REST & Microservices",
+      "icon": "🔗",
+      "color": "#06b6d4",
+      "description": "REST principles, Communication, Resilience",
+      "sections": [
+        {
+          "id": "rest",
+          "title": "REST API Design",
+          "questions": [
+            {
+              "id": "rm-1",
+              "question": "What are the REST constraints and what makes an API truly RESTful?",
+              "answer": "REST constraints: Client-Server (separation of concerns), Stateless (no client context stored on server between requests), Cacheable (responses must define themselves as cacheable or not), Uniform Interface (resource identification via URIs, manipulation via representations, self-descriptive messages, HATEOAS), Layered System (client cannot tell if connected directly to server), Code on Demand (optional — send executable code). Most 'REST' APIs are actually REST Level 2 (resources + HTTP verbs); true REST (Level 3) includes HATEOAS."
+            },
+            {
+              "id": "rm-2",
+              "question": "How do you version a REST API?",
+              "answer": "URL versioning (/api/v1/users) — most visible, easy to route and cache, but pollutes URIs. Header versioning (Accept: application/vnd.company.v1+json) — clean URIs, harder to test in browser. Query param versioning (?version=1) — easy but messy. Semantic versioning with deprecation strategy. Best practice: URL versioning for public APIs (simplicity wins), header versioning for internal APIs. Always maintain backward compatibility and provide sunset headers before removing versions."
+            }
+          ]
+        },
+        {
+          "id": "microservices",
+          "title": "Microservices Patterns",
+          "questions": [
+            {
+              "id": "rm-3",
+              "question": "What is the Circuit Breaker pattern and how does it work?",
+              "answer": "Circuit Breaker prevents cascading failures in distributed systems. States: Closed (requests flow normally, failures are counted), Open (after failure threshold is reached, all requests are immediately rejected without calling the service — fail fast), Half-Open (after a timeout, a limited number of test requests are allowed through; if they succeed, circuit closes; if they fail, it reopens). Resilience4j is the standard in Spring Boot. Configure failure rate threshold, wait duration, and permitted calls in half-open state."
+            },
+            {
+              "id": "rm-4",
+              "question": "What is the Saga pattern for distributed transactions?",
+              "answer": "Saga manages data consistency across microservices without distributed ACID transactions. Two styles: Choreography (services publish events, others react — decoupled but hard to track) and Orchestration (central saga orchestrator sends commands, services respond — easier to monitor). Each step has a compensating transaction to undo it on failure. Example: Order saga — reserve inventory, charge payment, ship order; if payment fails, release inventory. Use with event sourcing for full auditability."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "system-design",
+      "title": "System Design",
+      "icon": "🏗️",
+      "color": "#8b5cf6",
+      "description": "Scalability, Caching, CAP theorem, Architecture",
+      "sections": [
+        {
+          "id": "fundamentals",
+          "title": "Core Concepts",
+          "questions": [
+            {
+              "id": "sd-1",
+              "question": "Explain the CAP theorem.",
+              "answer": "CAP states that a distributed system can guarantee at most 2 of 3 properties. Consistency: every read receives the most recent write. Availability: every request receives a response (not necessarily the latest). Partition Tolerance: system continues operating even if network partitions occur. Since network partitions are unavoidable in distributed systems, you choose between CP (consistent but may be unavailable during partitions — ZooKeeper, HBase) and AP (available but may return stale data — Cassandra, DynamoDB). The real choice is about what happens during partition events."
+            },
+            {
+              "id": "sd-2",
+              "question": "What are the strategies for horizontal scaling?",
+              "answer": "Load Balancing (distribute requests across instances — round-robin, least connections, consistent hashing). Stateless Design (store session in Redis/database, not server memory). Database Sharding (partition data across databases by shard key). Read Replicas (scale reads separately from writes). Caching Layer (Redis/Memcached to reduce DB hits). CDN (static assets at the edge). Message Queues (decouple producers from consumers — Kafka, RabbitMQ). Microservices (scale individual services independently)."
+            }
+          ]
+        },
+        {
+          "id": "design-problems",
+          "title": "Classic Design Problems",
+          "questions": [
+            {
+              "id": "sd-3",
+              "question": "How would you design a URL shortener like bit.ly?",
+              "answer": "Requirements: shorten URL, redirect to original, handle 100M URLs, 10:1 read/write ratio. Core: hash the long URL to a 6-char base62 string (62^6 = 56 billion unique URLs). Store mapping in DB (short_code → long_url, created_at, expiry). On redirect, look up code in Redis cache first, then DB, return 301/302. Scale: cache hit rate >99% means DB load is minimal. Handle collisions by checking DB before storing. Advanced: custom aliases, analytics (click count, geo), expiry, abuse prevention via blocklist."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dsa",
+      "title": "DSA",
+      "icon": "📊",
+      "color": "#ec4899",
+      "description": "Arrays, Trees, Graphs, Dynamic Programming",
+      "sections": [
+        {
+          "id": "data-structures",
+          "title": "Data Structures",
+          "questions": [
+            {
+              "id": "dsa-1",
+              "question": "What is the time complexity of common HashMap operations and what can cause them to degrade?",
+              "answer": "Average case: O(1) for get, put, remove. Worst case: O(n) when all keys hash to the same bucket (all in one linked list). Java 8+ mitigates this with Red-Black Tree conversion at 8 entries per bucket (O(log n) worst case). Degradation causes: poor hashCode implementation (all return same value), hash collision attacks (use LinkedHashMap or TreeMap when security matters). Load factor 0.75 is the default balance between space and time."
+            },
+            {
+              "id": "dsa-2",
+              "question": "Explain BFS vs DFS and their use cases.",
+              "answer": "BFS (Breadth-First Search) uses a Queue, explores level by level. Use for: shortest path in unweighted graph, finding nodes within k distance, level-order traversal, web crawling. DFS (Depth-First Search) uses a Stack (or recursion), explores as deep as possible first. Use for: cycle detection, topological sort, path existence, maze solving, tree traversals (pre/in/post-order). BFS guarantees shortest path; DFS uses less memory for deep-narrow graphs. Both are O(V+E)."
+            }
+          ]
+        },
+        {
+          "id": "algorithms",
+          "title": "Algorithms",
+          "questions": [
+            {
+              "id": "dsa-3",
+              "question": "What is dynamic programming and how do you identify a DP problem?",
+              "answer": "DP solves complex problems by breaking them into overlapping subproblems and storing results to avoid recomputation (memoization or tabulation). Identify DP problems by: optimal substructure (optimal solution contains optimal solutions to subproblems) and overlapping subproblems (same subproblems are solved multiple times). Common patterns: 0/1 Knapsack, Longest Common Subsequence, Coin Change, Fibonacci, Matrix Chain Multiplication. Approach: define state, write recurrence relation, identify base cases, choose top-down (recursion + memo) or bottom-up (iterative table)."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "devops-cloud",
+      "title": "DevOps & Cloud",
+      "icon": "☁️",
+      "color": "#0ea5e9",
+      "description": "CI/CD, AWS/GCP, Infrastructure as Code",
+      "sections": [
+        {
+          "id": "cicd",
+          "title": "CI/CD & DevOps Practices",
+          "questions": [
+            {
+              "id": "dc-1",
+              "question": "What is the difference between Continuous Integration, Continuous Delivery, and Continuous Deployment?",
+              "answer": "Continuous Integration (CI): developers merge code frequently (daily), automated build and test suite runs on every push — find integration bugs early. Continuous Delivery (CD): CI + automatically deploying to a staging/pre-prod environment; production deployment is manual/approved. Continuous Deployment: fully automated — every passing build goes to production without human intervention. Most enterprise teams use Continuous Delivery (risk management); startups may use Continuous Deployment for speed."
+            },
+            {
+              "id": "dc-2",
+              "question": "Explain the concept of Infrastructure as Code and key tools.",
+              "answer": "IaC manages and provisions infrastructure through code rather than manual processes. Benefits: version control, repeatability, auditability, disaster recovery. Tools: Terraform (cloud-agnostic, declarative, HCL — most popular), AWS CloudFormation (AWS-native, YAML/JSON), Pulumi (IaC in real programming languages), Ansible (configuration management + IaC, agentless, YAML playbooks). Best practices: modularize, use remote state, implement least-privilege IAM, and treat infrastructure changes as code review processes."
+            }
+          ]
+        },
+        {
+          "id": "cloud",
+          "title": "Cloud Fundamentals",
+          "questions": [
+            {
+              "id": "dc-3",
+              "question": "What are the differences between IaaS, PaaS, and SaaS?",
+              "answer": "IaaS (Infrastructure as a Service): you manage OS, runtime, applications; provider manages hardware, networking, storage. Examples: AWS EC2, GCP Compute Engine. PaaS (Platform as a Service): you manage only your application and data; provider manages everything else. Examples: Heroku, AWS Elastic Beanstalk, GCP App Engine. SaaS (Software as a Service): provider manages everything, you just use the software. Examples: Salesforce, Gmail. Microservice deployments typically use IaaS (EC2) or PaaS (ECS/EKS) or serverless (FaaS like Lambda)."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "docker-kubernetes",
+      "title": "Docker & Kubernetes",
+      "icon": "🐳",
+      "color": "#2563eb",
+      "description": "Containers, Orchestration, Networking, Helm",
+      "sections": [
+        {
+          "id": "docker",
+          "title": "Docker",
+          "questions": [
+            {
+              "id": "dk-1",
+              "question": "What is the difference between a Docker image and a container?",
+              "answer": "A Docker image is a read-only blueprint — a layered filesystem snapshot containing the application code, runtime, libraries, and configuration. A container is a running instance of an image — it adds a writable layer on top. Multiple containers can run from the same image without modifying it. Images are built from Dockerfiles, stored in registries (DockerHub, ECR). The layered architecture enables caching: layers that haven't changed are reused, making builds fast."
+            },
+            {
+              "id": "dk-2",
+              "question": "What are Docker multi-stage builds and why use them?",
+              "answer": "Multi-stage builds use multiple FROM instructions in a Dockerfile to create intermediate images, copying only necessary artifacts to the final image. Example: Stage 1 (builder) uses a JDK image to compile code; Stage 2 (runtime) uses a minimal JRE image and copies only the JAR. Benefits: dramatically smaller final images (Maven + source removed), reduced attack surface, no build tools in production. A Spring Boot app with multi-stage can go from 800MB to under 200MB."
+            }
+          ]
+        },
+        {
+          "id": "kubernetes",
+          "title": "Kubernetes",
+          "questions": [
+            {
+              "id": "dk-3",
+              "question": "Explain the Kubernetes architecture.",
+              "answer": "Control Plane: API Server (all communication hub), etcd (distributed key-value store for cluster state), Controller Manager (runs reconciliation loops — ReplicaSet, Deployment controllers), Scheduler (assigns pods to nodes based on resource requirements). Worker Nodes: kubelet (ensures containers are running in pods), kube-proxy (network rules for services), container runtime (Docker/containerd). Key objects: Pod (smallest unit), Deployment (manages ReplicaSets), Service (stable network endpoint), ConfigMap/Secret, Ingress (HTTP routing)."
+            },
+            {
+              "id": "dk-4",
+              "question": "What is the difference between a Deployment and a StatefulSet?",
+              "answer": "Deployment manages stateless applications — pods are interchangeable, can be scaled, replaced, or reordered freely. StatefulSet manages stateful applications (databases, Kafka, Zookeeper) — pods have stable, unique identities (pod-0, pod-1), stable persistent storage (each pod gets its own PVC), and ordered startup/shutdown guarantees. StatefulSets are needed when each instance has unique state (Kafka broker IDs, Elasticsearch node names). For databases in production, managed cloud services are often preferred over StatefulSets."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "security",
+      "title": "Security",
+      "icon": "🔐",
+      "color": "#dc2626",
+      "description": "Auth, OAuth2, JWT, OWASP, TLS",
+      "sections": [
+        {
+          "id": "auth",
+          "title": "Authentication & Authorization",
+          "questions": [
+            {
+              "id": "sec-1",
+              "question": "What is the difference between authentication and authorization?",
+              "answer": "Authentication (AuthN) verifies identity — who are you? (username/password, OAuth, biometric). Authorization (AuthZ) verifies permissions — what can you do? (RBAC, ABAC, ACL). Authentication happens first. Common mistake: conflating the two. Spring Security handles both: AuthenticationManager for AuthN, AccessDecisionManager/AuthorizationManager for AuthZ. JWT contains identity claims but authorization decisions should be made server-side, not solely based on JWT claims (they can be replayed)."
+            },
+            {
+              "id": "sec-2",
+              "question": "Explain OAuth2 and OpenID Connect flow.",
+              "answer": "OAuth2 is an authorization framework — it allows third-party apps to access resources on behalf of a user without sharing credentials. Flows: Authorization Code (web apps — most secure, uses PKCE for SPAs), Client Credentials (machine-to-machine), Device Flow (TVs/CLI). OpenID Connect (OIDC) is an identity layer on top of OAuth2 — adds an ID token (JWT with user info like sub, email). OAuth2 answers 'can this app access your Google Drive?'; OIDC answers 'who is this user?'. Spring Security has first-class OAuth2/OIDC support."
+            }
+          ]
+        },
+        {
+          "id": "owasp",
+          "title": "OWASP & Best Practices",
+          "questions": [
+            {
+              "id": "sec-3",
+              "question": "What are the OWASP Top 10 vulnerabilities?",
+              "answer": "2021 Top 10: 1. Broken Access Control (most common — enforce on server side). 2. Cryptographic Failures (weak encryption, plaintext passwords). 3. Injection (SQL, NoSQL, LDAP — use parameterized queries). 4. Insecure Design (threat modeling needed early). 5. Security Misconfiguration (default credentials, verbose errors). 6. Vulnerable Components. 7. Auth Failures (weak passwords, no MFA). 8. Software Integrity Failures (CI/CD pipeline attacks). 9. Logging Failures (no audit trail). 10. SSRF (Server-Side Request Forgery — validate outbound requests)."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "frontend",
+      "title": "Frontend",
+      "icon": "🎨",
+      "color": "#f97316",
+      "description": "React, JavaScript, CSS, Performance, Browser",
+      "sections": [
+        {
+          "id": "react",
+          "title": "React & Component Architecture",
+          "questions": [
+            {
+              "id": "fe-1",
+              "question": "What is the Virtual DOM and how does React's reconciliation work?",
+              "answer": "Virtual DOM is a lightweight JavaScript object tree representation of the real DOM. When state changes, React creates a new Virtual DOM tree, diffs it against the previous one (reconciliation using the Fiber algorithm), and computes the minimum set of real DOM mutations needed (diffing is O(n) with heuristics: elements of different types produce different trees; use key prop for lists). React batches these updates and applies them in a single paint cycle, making UI updates efficient."
+            },
+            {
+              "id": "fe-2",
+              "question": "When would you use useMemo vs useCallback?",
+              "answer": "useMemo memoizes the result of a computation — use when a calculation is expensive and its inputs don't change often (useMemo(() => computeHeavy(data), [data])). useCallback memoizes a function reference — use when passing callbacks to child components that are wrapped in React.memo, to prevent unnecessary re-renders (useCallback(() => handleClick(id), [id])). Both are optimizations — don't use them prematurely. Profile first. Overusing them adds overhead. The rule: useMemo for values, useCallback for functions passed as props."
+            }
+          ]
+        },
+        {
+          "id": "js-core",
+          "title": "JavaScript Core",
+          "questions": [
+            {
+              "id": "fe-3",
+              "question": "Explain the JavaScript event loop.",
+              "answer": "JavaScript is single-threaded with an event loop. Call Stack executes synchronous code (LIFO). Web APIs (setTimeout, fetch, DOM events) handle async operations. When async operations complete, their callbacks go to the Task Queue (macrotasks) or Microtask Queue (Promises, queueMicrotask). The event loop: runs the full call stack, then drains the entire microtask queue, then picks one macrotask, repeat. This is why Promise.then() resolves before setTimeout even at 0ms — microtasks take priority over macrotasks."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "design-patterns",
+      "title": "Design Patterns",
+      "icon": "🧩",
+      "color": "#a855f7",
+      "description": "Creational, Structural, Behavioral, SOLID",
+      "sections": [
+        {
+          "id": "solid",
+          "title": "SOLID Principles",
+          "questions": [
+            {
+              "id": "dp-1",
+              "question": "Explain the SOLID principles with examples.",
+              "answer": "S — Single Responsibility: a class should have one reason to change. UserService handles business logic; UserRepository handles DB access — not one class doing both. O — Open/Closed: open for extension, closed for modification. Add new payment methods by creating new classes, not modifying existing PaymentProcessor. L — Liskov Substitution: subclasses must be substitutable for their base class. If Rectangle has setWidth/setHeight and Square overrides both, it violates LSP. I — Interface Segregation: prefer small focused interfaces over one fat interface. D — Dependency Inversion: depend on abstractions, not concretions. Inject interfaces, not implementations."
+            }
+          ]
+        },
+        {
+          "id": "gof-patterns",
+          "title": "GoF Patterns",
+          "questions": [
+            {
+              "id": "dp-2",
+              "question": "What is the Singleton pattern and what are its pitfalls?",
+              "answer": "Singleton ensures only one instance of a class exists. Thread-safe implementations: eager initialization (static final field — simple, always created), double-checked locking with volatile (lazy, thread-safe), Bill Pugh (static inner class — lazy, thread-safe, no synchronization overhead), Enum singleton (best — handles serialization and reflection attacks). Pitfalls: hard to unit test (can't mock easily), hidden dependencies (global state), concurrency issues if not implemented correctly, violated in clustered environments (one instance per JVM, not per cluster)."
+            },
+            {
+              "id": "dp-3",
+              "question": "Explain the Strategy, Factory, and Observer patterns.",
+              "answer": "Strategy: defines a family of algorithms, encapsulate each one, make them interchangeable. Example: SortContext takes a SortStrategy — can swap BubbleSort/QuickSort at runtime. Factory Method: defines an interface for creating objects but lets subclasses decide which class to instantiate. Example: PaymentFactory.create('UPI') returns UPIPayment instance. Observer (Event-Driven): one-to-many dependency — when one object changes state, all dependents are notified. Example: EventBus, Spring ApplicationEvent, @EventListener. All three are heavily used in Spring itself."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "behavioral",
+      "title": "Behavioral Round",
+      "icon": "🤝",
+      "color": "#14b8a6",
+      "description": "STAR method, Leadership, Conflict, Growth",
+      "sections": [
+        {
+          "id": "leadership",
+          "title": "Leadership & Teamwork",
+          "questions": [
+            {
+              "id": "bh-1",
+              "question": "Tell me about a time you had a conflict with a team member. How did you resolve it?",
+              "answer": "Use STAR method. Situation: Briefly describe the context — disagreement on technical approach, deadline pressure, communication breakdown. Task: What was your responsibility to resolve it? Action: Did you initiate a 1-on-1, listen actively, find common ground, escalate appropriately? Did you focus on the problem not the person? Result: Was it resolved? What did you learn? Key themes interviewers want: maturity, communication, empathy, outcome-focus. Avoid: blame, vague answers, making yourself look perfect. Show you've grown from the experience."
+            },
+            {
+              "id": "bh-2",
+              "question": "Describe a situation where you had to learn a new technology quickly under pressure.",
+              "answer": "STAR structure. Situation: New project required technology you hadn't used — tight timeline. Task: You needed to deliver a working feature/system. Action: How did you approach learning? (Official docs first, hands-on experimentation, finding subject matter experts, pair programming, breaking down into small milestones). Result: Did you deliver? What was the quality? What would you do differently? Interviewers want: learning agility, resourcefulness, self-awareness. Show a specific technology and specific outcome, not a generic answer."
+            }
+          ]
+        },
+        {
+          "id": "self-reflection",
+          "title": "Self Reflection",
+          "questions": [
+            {
+              "id": "bh-3",
+              "question": "What is your greatest weakness?",
+              "answer": "Avoid fake weaknesses ('I work too hard'). Choose a real weakness that is: not critical to the role, something you are actively working on, and shows self-awareness. Structure: Name the weakness → give a specific past example of how it impacted you → describe concrete steps you are taking to improve → show evidence of improvement. Example: 'I used to struggle with saying no to additional work, which led to overcommitment. I now use a prioritization framework and communicate proactively with stakeholders when capacity is a concern. My last performance review noted improved delivery consistency.'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "resume-deep-dive",
+      "title": "Resume Deep Dive",
+      "icon": "📄",
+      "color": "#64748b",
+      "description": "Project walkthrough, technical decisions, impact",
+      "sections": [
+        {
+          "id": "project-questions",
+          "title": "Project & Experience Questions",
+          "questions": [
+            {
+              "id": "rd-1",
+              "question": "Walk me through the most complex project on your resume.",
+              "answer": "Structure: Business context (what problem were you solving, why did it matter?), your specific role and ownership, technical architecture decisions you made and why (especially trade-offs), challenges you faced and how you overcame them, measurable outcomes (performance improvement %, cost saved, users served, uptime improved). Practice this down to 3 minutes. Have a 30-second, 2-minute, and 5-minute version. Know every technology you mention deeply — if you listed Kafka, expect deep Kafka questions. If you listed microservices, expect design questions about them."
+            },
+            {
+              "id": "rd-2",
+              "question": "Why did you choose [specific technology] for that project? What alternatives did you consider?",
+              "answer": "This tests depth of knowledge and decision-making. Prepare for every technology on your resume: Why this over alternatives? What were the trade-offs? Would you make the same choice today? Example for choosing Kafka over RabbitMQ: 'We needed persistent, replayable event streams for audit compliance, high throughput (100k msg/sec), and the ability for multiple consumer groups to independently process the same events. Kafka's log-based architecture fit perfectly. RabbitMQ would have been simpler for point-to-point messaging, but our replay requirement made Kafka the right choice.'"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
