@@ -8,33 +8,561 @@
       "description": "Fundamentals, OOP, Collections, Multithreading",
       "sections": [
         {
-          "id": "oops",
-          "title": "OOP Concepts",
+          "id": "oop",
+          "title": "Object Oriented Programming",
           "questions": [
             {
               "id": "cj-1",
-              "question": "What are the four pillars of Object-Oriented Programming?",
-              "answer": "The four pillars are Encapsulation (bundling data and methods, hiding internal state), Inheritance (a class acquiring properties of another class), Polymorphism (one interface, many implementations — compile-time via overloading, runtime via overriding), and Abstraction (hiding complex implementation, showing only essentials via abstract classes or interfaces)."
+              "question": "1. What is encapsulation and why does it matter in real-world code?",
+              "answer": "* **1. Definition & Importance:** Encapsulation is bundling data and methods into a single unit while restricting direct external access to the state. In real-world code, it prevents external classes from forcing an object into an invalid or unpredictable state."
             },
             {
               "id": "cj-2",
-              "question": "What is the difference between an abstract class and an interface in Java?",
-              "answer": "An abstract class can have both abstract and concrete methods, instance variables, constructors, and can extend only one class. An interface (Java 8+) can have abstract methods, default methods, static methods, and constants. A class can implement multiple interfaces but extend only one abstract class. Use abstract class for shared base behavior; use interface for defining a contract."
+              "question": "2. How is encapsulation different from just making fields private?",
+              "answer": "* **2. Vs. Private Fields:** Making fields private is just the *mechanism*. Encapsulation is the broader *design principle* of controlling exactly how state is mutated (e.g., adding validation logic inside a method) to protect data integrity."
             },
             {
               "id": "cj-3",
-              "question": "Explain method overloading vs method overriding.",
-              "answer": "Overloading is compile-time polymorphism — same method name, different parameters in the same class. Overriding is runtime polymorphism — subclass provides a specific implementation of a method already defined in its superclass. Overriding requires same method signature, and the @Override annotation is best practice. Overriding cannot reduce visibility or throw new checked exceptions."
+              "question": "3. Can a class be encapsulated but still expose mutable state? How would you fix that?",
+              "answer": "* **3. Mutable State Exposure:** Yes, returning a private mutable object (like a `Date` or a `List`) via a getter breaks encapsulation because the caller can modify the internal object. Fix this by returning defensive copies (e.g., `return new ArrayList<>(myList)` or using `List.copyOf()`)."
             },
             {
               "id": "cj-4",
-              "question": "What is the 'super' keyword in Java?",
-              "answer": "The 'super' keyword refers to the immediate parent class. It is used to call the parent class constructor (super()), access parent class methods (super.methodName()), and access parent class fields when they are hidden by child class fields. super() must be the first statement in a constructor."
+              "question": "4. What is the difference between encapsulation and data hiding?",
+              "answer": "* **4. Encapsulation vs. Data Hiding:** Data hiding specifically refers to restricting access (using `private`). Encapsulation uses data hiding to achieve its goal of bundling state and behavior safely."
             },
             {
               "id": "cj-5",
-              "question": "What is a constructor and what are its types?",
-              "answer": "A constructor is a special method with the same name as the class, no return type, called when an object is created. Types: Default constructor (no-arg, compiler provides if none defined), Parameterized constructor (takes arguments to initialize fields), Copy constructor (takes an object of same class and copies values — not built-in in Java but can be written manually)."
+              "question": "5. How do getter/setter methods sometimes break encapsulation rather than enforce it?",
+              "answer": "* **5. Getters/Setters Breaking Encapsulation:** If every private field has a public getter and setter without any validation, you have simply created an \"anemic domain model.\" You are exposing the internal implementation details, effectively making the fields public in practice."
+            },
+            {
+              "id": "cj-6",
+              "question": "6. What is abstraction and how is it different from encapsulation?",
+              "answer": "* **6. Abstraction vs. Encapsulation:** Abstraction hides complexity by showing only *what* an object does (the interface). Encapsulation hides the internal state by restricting *how* it does it (the implementation)."
+            },
+            {
+              "id": "cj-7",
+              "question": "7. How do abstract classes and interfaces both achieve abstraction differently?",
+              "answer": "* **7. Abstract Classes vs. Interfaces:** Abstract classes define a core identity (\"IS-A\") and share structural state/behavior. Interfaces define a specific capability or contract (\"CAN-DO\") without dictating the implementation."
+            },
+            {
+              "id": "cj-8",
+              "question": "8. When would you choose an abstract class over an interface in Java?",
+              "answer": "* **8. Choosing Abstract Classes:** Use them when classes share a strong identity, require shared mutable state (instance variables), or need shared non-public (protected) helper methods."
+            },
+            {
+              "id": "cj-9",
+              "question": "9. Can you instantiate an abstract class? What happens if you try?",
+              "answer": "* **9. Instantiation:** You cannot instantiate an abstract class. Attempting to do so results in a compile-time error because abstract classes represent incomplete blueprints."
+            },
+            {
+              "id": "cj-10",
+              "question": "10. What is the purpose of having an abstract method with no body?",
+              "answer": "* **10. Abstract Method Purpose:** It forces all concrete child classes to provide their own specific, tailored implementation of a behavior defined at the parent level."
+            },
+            {
+              "id": "cj-11",
+              "question": "11. What is inheritance and what problem does it solve?",
+              "answer": "* **11. Definition & Purpose:** Inheritance allows a new class to acquire the properties and behaviors of an existing class. It promotes code reuse and establishes a logical hierarchy."
+            },
+            {
+              "id": "cj-12",
+              "question": "12. What is the difference between IS-A and HAS-A relationships?",
+              "answer": "* **12. IS-A vs. HAS-A:** \"IS-A\" represents inheritance (a `SportsCar` IS A `Car`). \"HAS-A\" represents composition (a `Car` HAS AN `Engine`)."
+            },
+            {
+              "id": "cj-13",
+              "question": "13. Why does Java not support multiple inheritance with classes?",
+              "answer": "* **13. No Multiple Class Inheritance:** Java avoids it to prevent the \"Diamond Problem,\" where ambiguity arises if a class inherits from two parents that define the exact same method."
+            },
+            {
+              "id": "cj-14",
+              "question": "14. What is the Diamond Problem and how does Java handle it with interfaces?",
+              "answer": "* **14. Handling the Diamond Problem:** Java allows multiple interface inheritance. If two interfaces provide the same `default` method, the compiler forces the implementing class to explicitly override the method to resolve the ambiguity."
+            },
+            {
+              "id": "cj-15",
+              "question": "15. What does super do and when would you use super() vs super.methodName()?",
+              "answer": "* **15. The `super` Keyword:** `super` references the parent class instance. `super()` invokes the parent's constructor. `super.methodName()` calls an overridden method from the parent class."
+            },
+            {
+              "id": "cj-16",
+              "question": "16. What is the difference between method overriding and method hiding?",
+              "answer": "* **16. Overriding vs. Hiding:** Overriding applies to instance methods and is resolved at runtime (polymorphism). Method hiding applies to static methods and is resolved at compile time based on the reference type."
+            },
+            {
+              "id": "cj-17",
+              "question": "17. Can constructors be inherited in Java?",
+              "answer": "* **17. Inheriting Constructors:** No, constructors are not inherited. They are invoked (either implicitly or explicitly via `super()`) during object creation."
+            },
+            {
+              "id": "cj-18",
+              "question": "18. What is constructor chaining and how does it work with inheritance?",
+              "answer": "* **18. Constructor Chaining:** This is the process of calling one constructor from another. It happens vertically (child calling parent via `super()`) or horizontally (overloaded constructors in the same class using `this()`)."
+            },
+            {
+              "id": "cj-19",
+              "question": "19. What happens when a parent class constructor calls a method that is overridden in the child class?",
+              "answer": "* **19. Overridden Methods in Constructors:** This is a severe anti-pattern. The child's overridden method will execute *before* the child's constructor has finished, often leading to `NullPointerException`s because child state isn't initialized yet."
+            },
+            {
+              "id": "cj-20",
+              "question": "20. What is a covariant return type?",
+              "answer": "* **20. Covariant Return Type:** This allows an overriding method in a child class to return a more specific type (a subclass) than the return type declared in the parent's method."
+            },
+            {
+              "id": "cj-21",
+              "question": "21. What is polymorphism and what are its two types in Java?",
+              "answer": "* **21. Definition & Types:** Polymorphism is the ability of an object to take on many forms. The two types are compile-time (method overloading) and runtime (method overriding)."
+            },
+            {
+              "id": "cj-22",
+              "question": "22. What is the difference between compile-time and runtime polymorphism?",
+              "answer": "* **22. Compile-Time vs. Runtime:** Compile-time is resolved by the compiler based on the method signature (parameters). Runtime is resolved by the JVM based on the actual object instance in memory."
+            },
+            {
+              "id": "cj-23",
+              "question": "23. How does method overloading achieve compile-time polymorphism?",
+              "answer": "* **23. Overloading (Compile-Time):** Multiple methods share the same name but have different parameter lists within the same class."
+            },
+            {
+              "id": "cj-24",
+              "question": "24. How does method overriding achieve runtime polymorphism?",
+              "answer": "* **24. Overriding (Runtime):** A subclass provides a specific implementation for a method already defined in its parent hierarchy."
+            },
+            {
+              "id": "cj-25",
+              "question": "25. What is dynamic method dispatch?",
+              "answer": "* **25. Dynamic Method Dispatch:** The JVM mechanism that determines which overridden method to call at runtime based on the actual object type, not the reference variable type."
+            },
+            {
+              "id": "cj-26",
+              "question": "26. Can you override a static method in Java? What actually happens?",
+              "answer": "* **26. Overriding Static Methods:** You cannot. They are \"hidden.\" The method executed depends entirely on the declared type of the reference variable at compile time."
+            },
+            {
+              "id": "cj-27",
+              "question": "27. Can you override a private method? Why or why not?",
+              "answer": "* **27. Overriding Private Methods:** You cannot. Private methods are invisible to subclasses, so providing a method with the same name in a subclass creates a completely new, unrelated method."
+            },
+            {
+              "id": "cj-28",
+              "question": "28. What is the role of the @Override annotation? Is it mandatory?",
+              "answer": "* **28. The `@Override` Annotation:** It is not mandatory but highly recommended. It forces the compiler to verify that the method actually overrides a parent method, preventing bugs caused by typos in method signatures."
+            },
+            {
+              "id": "cj-29",
+              "question": "29. What happens if you call an overridden method from a constructor?",
+              "answer": "* **29. Calling Overridden Methods from Constructors:** (See answer 19). It runs the child's logic before the child is fully constructed."
+            },
+            {
+              "id": "cj-30",
+              "question": "30. How do abstraction and encapsulation complement each other? Give a real example.",
+              "answer": "* **30. Abstraction & Encapsulation Complementing:** Think of a smartphone. Abstraction provides the touch screen (the simple interface). Encapsulation protects the battery and processor inside (hiding the state and complex logic)."
+            },
+            {
+              "id": "cj-31",
+              "question": "31. How does polymorphism depend on inheritance to work?",
+              "answer": "* **31. Polymorphism Depending on Inheritance:** Runtime polymorphism relies on a parent class reference variable pointing to a child class object. This relationship is only possible through inheritance or interface implementation."
+            },
+            {
+              "id": "cj-32",
+              "question": "32. Can you achieve polymorphism without inheritance in Java?",
+              "answer": "* **32. Polymorphism Without Inheritance:** Yes. Compile-time polymorphism (overloading) does not require inheritance."
+            },
+            {
+              "id": "cj-33",
+              "question": "33. Is method overloading really polymorphism? Defend your answer.",
+              "answer": "* **33. Is Overloading Really Polymorphism?:** Yes, it is known as \"ad-hoc polymorphism.\" It allows a single method name to represent different behaviors depending on the provided arguments."
+            },
+            {
+              "id": "cj-34",
+              "question": "34. How would you explain the difference between all four pillars to a junior developer using a single real-world analogy?",
+              "answer": "* **34. Single Analogy for All Four:** A Coffee Machine. **Abstraction**: The \"Brew\" button. **Encapsulation**: The internal water heater and grinder are hidden. **Inheritance**: An `EspressoMachine` extends a standard `CoffeeMachine`. **Polymorphism**: Pressing \"Brew\" on the `EspressoMachine` produces espresso, while the standard machine produces drip coffee."
+            },
+            {
+              "id": "cj-35",
+              "question": "35. If inheritance creates tight coupling, when should you prefer composition over inheritance?",
+              "answer": "* **35. Composition Over Inheritance:** Prefer composition to avoid deep, fragile inheritance trees. Use it when you need to change behavior dynamically at runtime or when the relationship is genuinely \"HAS-A\"."
+            },
+            {
+              "id": "cj-36",
+              "question": "36. How does the Liskov Substitution Principle relate to inheritance and polymorphism?",
+              "answer": "* **36. Liskov Substitution Principle (LSP):** LSP states that objects of a superclass must be replaceable with objects of subclasses without breaking the application. It is the rulebook for doing inheritance and polymorphism correctly."
+            },
+            {
+              "id": "cj-37",
+              "question": "37. Can encapsulation be violated through inheritance? How?",
+              "answer": "* **37. Encapsulation Violated via Inheritance:** Yes. If a parent class uses `protected` fields instead of `private` ones, subclasses can bypass setter validations and manipulate the parent's internal state directly."
+            },
+            {
+              "id": "cj-38",
+              "question": "38. How do interfaces help achieve both abstraction and polymorphism simultaneously?",
+              "answer": "* **38. Interfaces Achieving Both:** Interfaces achieve abstraction by exposing only method signatures (the \"what\"). They achieve polymorphism by allowing a single interface reference to dynamically call implementations from any class that implements the interface."
+            },
+            {
+              "id": "cj-39",
+              "question": "39. What are all the differences between an interface and an abstract class in Java?",
+              "answer": "* **39. All Differences:** Abstract classes can have constructors, instance state, and any access modifiers (`private`, `protected`). Interfaces cannot be instantiated, have no instance state (fields are `public static final`), and methods are implicitly `public`. A class can implement multiple interfaces but extend only one abstract class."
+            },
+            {
+              "id": "cj-40",
+              "question": "40. Since Java 8, interfaces can have default and static methods — does that blur the line with abstract classes?",
+              "answer": "* **40. Java 8 Blurred Lines:** The lines are blurred regarding *behavior* because interfaces can now have `default` and `static` methods. However, the strict difference remains in *state*: interfaces still cannot hold instance variables or constructors."
+            },
+            {
+              "id": "cj-41",
+              "question": "41. Can an interface have a constructor? Why or why not?",
+              "answer": "* **41. Interface Constructors:** No. Interfaces have no instance state to initialize and cannot be instantiated, rendering constructors useless."
+            },
+            {
+              "id": "cj-42",
+              "question": "42. Can an interface extend another interface? Can it extend multiple interfaces?",
+              "answer": "* **42. Extending Interfaces:** Yes. An interface can extend another interface. Furthermore, an interface can extend *multiple* interfaces, unlike classes."
+            },
+            {
+              "id": "cj-43",
+              "question": "43. What is a functional interface? Give examples beyond Runnable.",
+              "answer": "* **43. Functional Interface:** An interface containing exactly one abstract method (Single Abstract Method). Non-`Runnable` examples: `Comparator`, `Callable`, `Predicate`, `Consumer`."
+            },
+            {
+              "id": "cj-44",
+              "question": "44. What is the difference between a marker interface and a functional interface?",
+              "answer": "* **44. Marker vs. Functional Interface:** A marker interface (like `Serializable` or `Cloneable`) has zero methods and acts as a tag for the JVM. A functional interface has exactly one abstract method to enable lambda expressions."
+            },
+            {
+              "id": "cj-45",
+              "question": "45. What is the purpose of default methods in interfaces and what problem did they solve in Java 8?",
+              "answer": "* **45. Default Methods Purpose:** Introduced in Java 8 to allow adding new methods to existing interfaces without breaking the classes that already implemented them (crucial for adding Streams API to Collections)."
+            },
+            {
+              "id": "cj-46",
+              "question": "46. If a class implements two interfaces that both have the same default method, what happens?",
+              "answer": "* **46. Implementing Conflicting Default Methods:** The compiler will throw an error. The implementing class must explicitly override the conflicting method and provide its own implementation (or explicitly call one of the interface's `super` implementations)."
+            },
+            {
+              "id": "cj-47",
+              "question": "47. Can you have instance variables in an interface?",
+              "answer": "* **47. Instance Variables in Interfaces:** No. You can declare variables, but the compiler automatically makes them `public static final` (constants)."
+            },
+            {
+              "id": "cj-48",
+              "question": "48. What are the implicit modifiers on interface methods and variables?",
+              "answer": "* **48. Implicit Modifiers:** Variables are implicitly `public static final`. Standard methods are implicitly `public abstract`."
+            },
+            {
+              "id": "cj-49",
+              "question": "49. What is a sealed interface and what problem does it solve? (Java 17+)",
+              "answer": "* **49. Sealed Interfaces (Java 17+):** Sealed interfaces explicitly restrict which classes or interfaces are permitted to implement or extend them. This solves exhaustive pattern matching in `switch` statements, ensuring the compiler knows every possible implementation at compile time."
+            }
+          ]
+        },
+        {
+          "id": "classes-objects",
+          "title": "Java Classes & Objects Deep Dive",
+          "questions": [
+            {
+              "id": "cj-50",
+              "question": "50. How many ways can you create an object in Java?",
+              "answer": "* **50. Ways to create an object:** There are five main ways: using the `new` keyword (standard), Reflection (`Class.forName().newInstance()` or `Constructor.newInstance()`), the `clone()` method, Deserialization, and Factory methods."
+            },
+            {
+              "id": "cj-51",
+              "question": "51. What is the difference between shallow copy and deep copy?",
+              "answer": "* **51. Shallow vs. Deep copy:** A shallow copy duplicates the top-level object but merely copies references to nested objects (both point to the same memory). A deep copy creates a completely independent clone, meaning it recursively duplicates the top-level object and all nested child objects."
+            },
+            {
+              "id": "cj-52",
+              "question": "52. What does the clone() method do and why is it considered problematic?",
+              "answer": "* **52. The `clone()` method:** It is a native mechanism for creating a shallow copy. It is considered highly problematic because it bypasses constructors entirely, requires the clunky `Cloneable` marker interface, forces you to handle `CloneNotSupportedException`, and handles `final` fields poorly."
+            },
+            {
+              "id": "cj-53",
+              "question": "53. What is a copy constructor and how is it different from clone()?",
+              "answer": "* **53. Copy constructor:** A constructor that takes an instance of its own class as a parameter to duplicate its state (e.g., `public Car(Car other)`). It is far superior to `clone()` because it is explicit, executes constructor logic, allows you to properly assign `final` fields, and doesn't rely on hidden JVM magic."
+            },
+            {
+              "id": "cj-54",
+              "question": "54. What is the default constructor and when does the compiler generate one?",
+              "answer": "* **54. Default constructor:** A no-argument constructor that the Java compiler injects automatically into the bytecode **only** if the class contains absolutely no explicit constructors."
+            },
+            {
+              "id": "cj-55",
+              "question": "55. If a parent class has no default constructor and a child class constructor doesn't call super() explicitly, what happens?",
+              "answer": "* **55. Missing parent no-args constructor:** The code will not compile. The compiler implicitly inserts a `super()` call at the start of the child's constructor. If the parent class has a parameterized constructor but no no-args constructor, that implicit `super()` call fails. The child must explicitly call `super(arguments)`."
+            },
+            {
+              "id": "cj-56",
+              "question": "56. Can a constructor be private? When would you use that?",
+              "answer": "* **56. Private constructor:** It prevents the class from being instantiated from the outside. This is heavily used in the Singleton design pattern, in utility classes that only hold `static` methods (like `java.lang.Math`), or to force the use of static factory methods."
+            },
+            {
+              "id": "cj-57",
+              "question": "57. What is a static factory method and why is it sometimes preferred over constructors?",
+              "answer": "* **57. Static factory method:** A static method that returns an instance of the class (e.g., `String.valueOf()`). It is often preferred over constructors because they have descriptive names, can return cached/reused instances (like `Boolean.valueOf()`), can return subtypes, and don't strictly require allocating a new object every time."
+            },
+            {
+              "id": "cj-58",
+              "question": "58. What does static mean in Java and what can be marked static?",
+              "answer": "* **58. Meaning and targets:** `static` dictates that a member belongs to the class itself rather than to any specific object instance. It can be applied to variables, methods, nested classes, and initialization blocks."
+            },
+            {
+              "id": "cj-59",
+              "question": "59. What is the difference between static and instance variables in terms of memory?",
+              "answer": "* **59. Memory differences:** Static variables are stored in the Metaspace (formerly PermGen) and exist exactly once per JVM ClassLoader, shared by all instances. Instance variables are stored on the Heap, and a fresh copy is allocated for every single object created."
+            },
+            {
+              "id": "cj-60",
+              "question": "60. Can a static method access instance variables? Why or why not?",
+              "answer": "* **60. Static accessing instance variables:** No, a compile-time error occurs. A static method does not belong to any specific instance and has no `this` reference, meaning it has no way of knowing *which* object's instance variable you are trying to read."
+            },
+            {
+              "id": "cj-61",
+              "question": "61. Can a static method be overridden? What is method hiding?",
+              "answer": "* **61. Overriding static methods:** You cannot override them; you can only \"hide\" them. Method resolution for static methods is done at compile-time based on the reference variable's type, bypassing dynamic method dispatch entirely."
+            },
+            {
+              "id": "cj-62",
+              "question": "62. What is a static initializer block and when does it run?",
+              "answer": "* **62. Static initializer block:** A block of code (`static { ... }`) that is executed exactly once when the class is loaded into memory by the ClassLoader, before any objects are instantiated or static methods are invoked."
+            },
+            {
+              "id": "cj-63",
+              "question": "63. What is the order of execution: static blocks, instance blocks, and constructors?",
+              "answer": "* **63. Execution order:** When creating the first object of a class: Static blocks execute first (at class load). Then, Instance initializer blocks execute. Finally, the Constructor body executes."
+            },
+            {
+              "id": "cj-64",
+              "question": "64. Can you use this inside a static method?",
+              "answer": "* **64. Using `this` in a static method:** You cannot. The `this` keyword represents the current object instance, which does not exist in a static context."
+            },
+            {
+              "id": "cj-65",
+              "question": "65. What is a static nested class vs an inner class?",
+              "answer": "* **65. Static nested vs. Inner class:** A static nested class is just a class scoped inside another; it does not need an instance of the outer class to be created and cannot access the outer class's non-static members. An inner class (non-static) intrinsically holds a hidden reference to the outer class instance and can freely access the outer class's instance variables."
+            },
+            {
+              "id": "cj-66",
+              "question": "66. What are all the things final can be applied to in Java?",
+              "answer": "* **66. Application targets:** The `final` keyword can be applied to classes, methods, and variables (instance, static, local, and method parameters)."
+            },
+            {
+              "id": "cj-67",
+              "question": "67. What does it mean for a variable to be final? Does it guarantee immutability?",
+              "answer": "* **67. Meaning and Immutability:** A `final` variable means its reference cannot be reassigned once initialized. However, it does **not** guarantee true immutability. If a `final` variable points to a mutable object (like a `List` or `Date`), you cannot point it to a *new* list, but you can still add or remove items from the existing list."
+            },
+            {
+              "id": "cj-68",
+              "question": "68. What is a blank final variable?",
+              "answer": "* **68. Blank final variable:** An instance variable declared as `final` but not immediately initialized at the declaration line. It must be definitively assigned a value in every single constructor, or it won't compile."
+            },
+            {
+              "id": "cj-69",
+              "question": "69. What is effectively final in Java 8+ and why does it matter for lambdas?",
+              "answer": "* **69. Effectively final:** Introduced in Java 8, a variable is \"effectively final\" if it is never reassigned after its initial assignment, even if the `final` keyword is omitted. Lambdas and anonymous inner classes are only allowed to capture local variables that are `final` or effectively final to prevent thread-safety issues with stack memory."
+            },
+            {
+              "id": "cj-70",
+              "question": "70. What does a final class mean? Give examples from JDK.",
+              "answer": "* **70. Final class:** A class that cannot be subclassed. The JDK uses this extensively (e.g., `String`, `Integer`, `Math`) to ensure security, guarantee immutability, and prevent malicious behavior via overriding."
+            },
+            {
+              "id": "cj-71",
+              "question": "71. What does a final method mean and when would you use it?",
+              "answer": "* **71. Final method:** A method that cannot be overridden by subclasses. This is used when an architect wants to lock down a critical piece of algorithm or lifecycle behavior in a base class so child classes cannot alter it."
+            },
+            {
+              "id": "cj-72",
+              "question": "72. Can you have a final abstract class? Why or why not?",
+              "answer": "* **72. Final abstract class:** This is a compilation error. They are polar opposites. `abstract` demands that a class be subclassed to be useful, while `final` strictly forbids subclassing."
+            },
+            {
+              "id": "cj-73",
+              "question": "73. What are all the uses of the this keyword in Java?",
+              "answer": "* **73. Uses of `this`:** Referencing current instance variables (especially when shadowed by parameters), invoking another constructor in the same class (`this()`), passing the current instance to another method (`method(this)`), or returning the current instance (used heavily in the Builder pattern)."
+            },
+            {
+              "id": "cj-74",
+              "question": "74. What is this() constructor call and what are its constraints?",
+              "answer": "* **74. The `this()` call:** It is used for constructor chaining within the same class. The absolute, unbreakable constraint is that `this()` must be the very first statement inside the constructor body."
+            },
+            {
+              "id": "cj-75",
+              "question": "75. Can this be used in a static context?",
+              "answer": "* **75. `this` in a static context:** (See answer 64). Impossible. There is no current instance in a static context."
+            },
+            {
+              "id": "cj-76",
+              "question": "76. What is the difference between this.variable and just variable inside a method?",
+              "answer": "* **76. `this.variable` vs. `variable`:** Calling `variable` instructs the compiler to look in the closest scope first (local scope, like a method parameter). If a local variable shares the exact name as an instance variable, it \"shadows\" it. Using `this.variable` forces the compiler to bypass the local scope and directly target the object's instance field."
+            }
+          ]
+        },
+        {
+          "id": "memory-internals",
+          "title": "Java Memory Model & Internals",
+          "questions": [
+            {
+              "id": "cj-77",
+              "question": "77. What are the different memory areas in JVM?",
+              "answer": "* **77. JVM Memory Areas:** There are five main runtime data areas: The **Heap** (objects), the **Method Area / Metaspace** (class metadata), the **JVM Stack** (thread execution frames), the **PC Register** (current instruction pointer), and the **Native Method Stack** (C/C++ native calls)."
+            },
+            {
+              "id": "cj-78",
+              "question": "78. What is stored in the heap vs the stack?",
+              "answer": "* **78. Heap vs. Stack:** The Heap is where all objects and arrays are dynamically allocated. The Stack is where method execution takes place; it stores local primitive variables and the *references* (pointers) to the objects that live in the Heap."
+            },
+            {
+              "id": "cj-79",
+              "question": "79. What is the method area / metaspace?",
+              "answer": "* **79. Method Area / Metaspace:** This is the memory space that stores class-level data: class structures, method code, constants, and static variables. In Java 8, Metaspace replaced the older \"PermGen\" and was moved out of the JVM Heap into the host OS's native memory to prevent `OutOfMemoryError: PermGen space`."
+            },
+            {
+              "id": "cj-80",
+              "question": "80. What is the difference between stack memory and heap memory in terms of thread safety?",
+              "answer": "* **80. Thread Safety (Stack vs. Heap):** Stack memory is inherently thread-safe because every single thread gets its own private, isolated Stack. The Heap is intrinsically thread-unsafe because it is a shared global space accessible by all active threads, necessitating synchronization."
+            },
+            {
+              "id": "cj-81",
+              "question": "81. Where are static variables stored?",
+              "answer": "* **81. Location of static variables:** Since Java 8, static variables are stored on the Heap, explicitly attached to the `java.lang.Class` object representing that specific class. (The *metadata* about the class remains in the native Metaspace)."
+            },
+            {
+              "id": "cj-82",
+              "question": "82. Where are String literals stored and why?",
+              "answer": "* **82. String literals location:** They are stored in a specialized memory area within the Heap called the **String Pool**. This is done for optimization (the Flyweight design pattern) to reuse identical immutable string instances and drastically save memory."
+            },
+            {
+              "id": "cj-83",
+              "question": "83. What is the String Pool and how does it work?",
+              "answer": "* **83. The String Pool:** When a string literal is created, the JVM checks the String Pool. If an identical string already exists, the JVM returns a reference to the existing one. If not, it creates a new string in the pool."
+            },
+            {
+              "id": "cj-84",
+              "question": "84. What is the difference between new String(\"hello\") and \"hello\"?",
+              "answer": "* **84. `new String(\"hello\")` vs `\"hello\"`:** Using `\"hello\"` uses the String Pool mechanism. Using `new String(\"hello\")` explicitly bypasses the pool check, forcing the JVM to allocate a brand-new, redundant `String` object in the standard Heap space."
+            },
+            {
+              "id": "cj-85",
+              "question": "85. What is garbage collection and how does the JVM decide what to collect?",
+              "answer": "* **85. What is GC and how it decides:** Garbage Collection is the automated process of reclaiming heap memory. The JVM uses the \"Reachability Analysis\" algorithm. It starts at \"GC Roots\" (active threads, local variables on the stack, static variables) and traces every connected object. Any object that cannot be reached from a GC Root is marked as garbage."
+            },
+            {
+              "id": "cj-86",
+              "question": "86. What are the different generations in the JVM heap (Young, Old, Metaspace)?",
+              "answer": "* **86. Heap Generations:**\n    * **Young Generation:** Where new objects are allocated (contains Eden space and two Survivor spaces).\n    * **Old Generation (Tenured):** Where long-lived objects are moved after surviving several Young Gen GC cycles.\n    * *(Note: Metaspace is native memory, not part of the standard heap generations).*"
+            },
+            {
+              "id": "cj-87",
+              "question": "87. What is the difference between Minor GC and Major GC?",
+              "answer": "* **87. Minor vs. Major GC:** A **Minor GC** cleans only the Young Generation; it happens frequently and is very fast. A **Major GC (or Full GC)** cleans the Old Generation (and often the entire heap); it is infrequent but expensive, often causing noticeable \"Stop-The-World\" application pauses."
+            },
+            {
+              "id": "cj-88",
+              "question": "88. What are strong, weak, soft, and phantom references?",
+              "answer": "* **88. Reference Types:**\n    * **Strong:** Standard reference (`new Object()`). Never collected as long as it's reachable.\n    * **Soft:** Collected *only* if the JVM is desperately running out of memory. Good for memory-sensitive caches.\n    * **Weak:** Collected on the very next GC cycle, even if memory is plentiful. Used heavily in `WeakHashMap`.\n    * **Phantom:** Enqueued in a `ReferenceQueue` after the object is finalized but before its memory is reclaimed. Used for safe native resource cleanup."
+            },
+            {
+              "id": "cj-89",
+              "question": "89. What is a memory leak in Java? Can GC prevent all memory leaks?",
+              "answer": "* **89. Memory Leaks:** A memory leak in Java occurs when objects are no longer used by the application logic, but their references are unintentionally kept alive by GC Roots. GC **cannot** prevent this, because to the JVM, the objects are still technically \"reachable.\""
+            },
+            {
+              "id": "cj-90",
+              "question": "90. What common coding patterns cause memory leaks?",
+              "answer": "* **90. Common Leak Patterns:** Unbounded caches (like a static `HashMap` that continually grows), unclosed resources (database connections, streams), adding objects to a collection without ever removing them, and `ThreadLocal` variables in application servers that aren't explicitly cleaned up (`.remove()`)."
+            },
+            {
+              "id": "cj-91",
+              "question": "91. What is the difference between G1GC and ZGC at a high level?",
+              "answer": "* **91. G1GC vs. ZGC:**\n    * **G1GC (Garbage First):** Divides the heap into equal-sized regions and prioritizes collecting regions with the most garbage. It aims for predictable, user-defined pause time targets.\n    * **ZGC:** A modern, scalable, low-latency collector (Java 11/15+). It performs almost all GC operations concurrently with application threads, keeping pause times incredibly low (sub-millisecond), regardless of whether the heap is 1GB or 16TB."
+            },
+            {
+              "id": "cj-92",
+              "question": "92. What does System.gc() do? Should you ever call it?",
+              "answer": "* **92. `System.gc()`:** It is merely a *suggestion* to the JVM to run a Full GC cycle. You should **never** call it in production code. It disrupts the JVM's tuned GC heuristics and typically triggers an immediate, severe \"Stop-The-World\" pause, destroying application throughput."
+            },
+            {
+              "id": "cj-93",
+              "question": "93. What is finalization and why is it deprecated?",
+              "answer": "* **93. Finalization (`finalize()`):** It is deprecated (and marked for removal in modern Java) because it is entirely unpredictable—you never know when or if the GC will run it. It causes severe performance penalties, delays memory reclamation, and can be used to accidentally \"resurrect\" dead objects. Modern Java uses `AutoCloseable` (try-with-resources) or the `Cleaner` API instead."
+            },
+            {
+              "id": "cj-94",
+              "question": "94. Is Java pass-by-value or pass-by-reference?",
+              "answer": "* **94. Pass-by-value or Pass-by-reference?:** Java is strictly **pass-by-value**. There are no exceptions."
+            },
+            {
+              "id": "cj-95",
+              "question": "95. If objects are passed by reference, why do we say Java is pass-by-value?",
+              "answer": "* **95. Why it's pass-by-value for objects:** When you pass an object to a method, you are not passing the actual object from the heap, nor are you passing a C++ style reference. You are passing a *copy of the reference pointer* by value."
+            },
+            {
+              "id": "cj-96",
+              "question": "96. Show with an example how reassigning an object reference inside a method doesn't affect the original.",
+              "answer": "* **96. Reassigning reference example:** If you write: `void changeCar(Car c) { c = new Car(\"BMW\"); }`\n    The original car in the calling method remains unchanged. You merely repointed the local *copy* of the reference to a new memory address. The caller's reference still points to the original car."
+            },
+            {
+              "id": "cj-97",
+              "question": "97. How does this behavior differ when you mutate the object vs reassign the reference?",
+              "answer": "* **97. Mutating vs. Reassigning:** If you write: `void paintCar(Car c) { c.setColor(\"Red\"); }`\n    The original car *does* turn red. Because the copied reference (passed by value) points to the exact same physical object in the heap, invoking mutator methods on that reference alters the shared underlying object."
+            }
+          ]
+        },
+        {
+          "id": "strings",
+          "title": "Strings",
+          "questions": [
+            {
+              "id": "cj-98",
+              "question": "98. Why is String immutable in Java?",
+              "answer": "* **98. Why is `String` immutable in Java?:** `String` is immutable because its internal backing array (a `char[]` in older versions, `byte[]` since Java 9) is marked `private` and `final`, and the class itself provides no mutator (setter) methods. Furthermore, the `String` class is marked `final`, preventing subclasses from overriding methods to alter this behavior."
+            },
+            {
+              "id": "cj-99",
+              "question": "99. What are the advantages of String immutability?",
+              "answer": "* **99. Advantages of String immutability:**\n    * **Security:** Strings are used for network connections, database URLs, and classloading. If they were mutable, a hacker could change the string reference after security validation checks have passed.\n    * **Thread Safety:** Because the state cannot change after creation, Strings are implicitly thread-safe and can be shared across multiple threads without synchronization.\n    * **Memory Efficiency:** It allows the JVM to implement the String Pool, caching and reusing literal instances.\n    * **Performance (Hashing):** Because the value never changes, a String calculates its hash code once and caches it. This makes Strings incredibly fast and reliable as `HashMap` keys."
+            },
+            {
+              "id": "cj-100",
+              "question": "100. What is the difference between String, StringBuilder, and StringBuffer?",
+              "answer": "* **100. `String` vs. `StringBuilder` vs. `StringBuffer`:**\n    * **`String`:** Immutable. Every modification creates a new object.\n    * **`StringBuilder`:** Mutable. Modifies the internal array directly without creating new objects. It is not thread-safe, making it very fast.\n    * **`StringBuffer`:** Mutable and thread-safe. All of its public methods are `synchronized`. It is slower than `StringBuilder` due to lock overhead and is largely considered legacy."
+            },
+            {
+              "id": "cj-101",
+              "question": "101. When would you use StringBuilder over String concatenation?",
+              "answer": "* **101. When to use `StringBuilder` over `String` concatenation:** You should strictly use `StringBuilder` when concatenating strings inside a loop. Using the `+` operator in a loop creates a massive number of intermediate, discarded `String` objects, causing severe CPU and memory churn for the Garbage Collector."
+            },
+            {
+              "id": "cj-102",
+              "question": "102. What does String.intern() do?",
+              "answer": "* **102. `String.intern()`:** It ensures the string exists in the String Pool. When called, the JVM checks if an identical string value already exists in the pool. If it does, it returns the reference to the pooled instance. If it doesn't, it adds the string to the pool and returns the new reference."
+            },
+            {
+              "id": "cj-103",
+              "question": "103. How does == vs .equals() behave with Strings?",
+              "answer": "* **103. `==` vs `.equals()` with Strings:** The `==` operator compares memory addresses (reference equality) to see if two variables point to the exact same object in the heap. The `.equals()` method compares the actual character-by-character content of the strings (value equality)."
+            },
+            {
+              "id": "cj-104",
+              "question": "104. What is the output of: new String(\"abc\") == new String(\"abc\")? Why?",
+              "answer": "* **104. Output of `new String(\"abc\") == new String(\"abc\")`:** The output is `false`. The `new` keyword strictly bypasses the String Pool and forces the JVM to allocate two entirely distinct objects in standard heap memory. Therefore, their memory addresses are different."
+            },
+            {
+              "id": "cj-105",
+              "question": "105. What happens to strings during concatenation in a loop — what does the compiler do?",
+              "answer": "* **105. String concatenation in a loop (Compiler behavior):** If you use the `+` operator in a loop, older compilers generate a completely new `StringBuilder` instance *for every single iteration*, append the text, and call `toString()`. This results in O(N²) time complexity and massive memory bloat. (Note: Java 9+ optimizes this slightly using `invokedynamic` and `StringConcatFactory`, but explicitly using a single `StringBuilder` outside the loop remains the standard best practice)."
+            },
+            {
+              "id": "cj-106",
+              "question": "106. What are some useful String methods introduced in Java 11, 12, and later?",
+              "answer": "* **106. Useful modern String methods (Java 11+):**\n    * `isBlank()`: Returns true if the string is empty or contains only whitespace.\n    * `strip()`, `stripLeading()`, `stripTrailing()`: Modern, Unicode-aware alternatives to `trim()`.\n    * `lines()`: Returns a `Stream<String>` split by line terminators.\n    * `repeat(n)`: Repeats the string *n* times."
+            },
+            {
+              "id": "cj-107",
+              "question": "107. What is String.format() vs String.formatted() vs text blocks (Java 15+)?",
+              "answer": "* **107. `String.format()` vs `String.formatted()` vs Text Blocks:**\n    * **`String.format()`:** A static method used to inject arguments into a template (e.g., `String.format(\"Hi %s\", name)`).\n    * **`.formatted()` (Java 15+):** An instance method equivalent to `String.format()`. It allows for cleaner chaining directly off a literal (e.g., `\"Hi %s\".formatted(name)`).\n    * **Text Blocks (Java 15+):** Denoted by `\"\"\"`, they allow you to write multi-line strings without needing manual `\\n` escape sequences or ugly concatenation. They are highly preferred for embedding JSON, HTML, or SQL directly in Java code."
             }
           ]
         },
@@ -43,19 +571,481 @@
           "title": "Collections Framework",
           "questions": [
             {
-              "id": "cj-6",
-              "question": "What is the difference between ArrayList and LinkedList?",
-              "answer": "ArrayList uses a dynamic array, providing O(1) random access but O(n) insertion/deletion in the middle. LinkedList uses a doubly-linked list, providing O(n) access but O(1) insertion/deletion when you have the node reference. ArrayList is better for frequent reads; LinkedList is better for frequent insertions/deletions. ArrayList also has better cache locality and lower memory overhead."
+              "id": "cj-108",
+              "question": "108. What is the Collections framework hierarchy in Java?",
+              "answer": "* **108. Hierarchy:** The root interface is `Iterable`. `Collection` extends `Iterable`. The main sub-interfaces of `Collection` are `List`, `Set`, and `Queue`. Note that `Map` is entirely separate and does not inherit from `Collection`, though it is fundamentally part of the framework."
             },
             {
-              "id": "cj-7",
-              "question": "How does HashMap work internally in Java?",
-              "answer": "HashMap uses an array of buckets (Node[] table). When you call put(key, value), it computes hashCode() of key, applies a secondary hash, and finds the bucket index via (n-1) & hash. If two keys land in the same bucket (collision), they form a linked list. From Java 8, when a bucket's list exceeds 8 entries, it converts to a Red-Black Tree for O(log n) performance. Default initial capacity is 16 with load factor 0.75."
+              "id": "cj-109",
+              "question": "109. What is the difference between Collection and Collections?",
+              "answer": "* **109. `Collection` vs `Collections`:** `Collection` is an interface representing a group of objects. `Collections` is a utility class containing only static methods (like `sort()`, `reverse()`, `unmodifiableList()`) that operate on or return collections."
             },
             {
-              "id": "cj-8",
-              "question": "What is the difference between HashMap, LinkedHashMap, and TreeMap?",
-              "answer": "HashMap: no ordering guarantee, O(1) average for get/put. LinkedHashMap: maintains insertion order (or access order if configured), slightly more memory. TreeMap: sorted by natural ordering or custom Comparator, O(log n) for all operations, implements NavigableMap. Use HashMap for general use, LinkedHashMap when order matters, TreeMap when sorted iteration is needed."
+              "id": "cj-110",
+              "question": "110. What is the difference between Iterable, Collection, List, Set, and Map?",
+              "answer": "* **110. Interface Differences:**\n    * `Iterable`: Guarantees the object can be iterated over sequentially (enables the enhanced for-loop).\n    * `Collection`: The base interface for single-element data structures.\n    * `List`: An ordered collection that allows duplicate elements and indexed access.\n    * `Set`: An unordered collection that strictly prohibits duplicate elements.\n    * `Map`: A data structure that maps unique keys to values (key-value pairs)."
+            },
+            {
+              "id": "cj-111",
+              "question": "111. What is RandomAccess interface and which collections implement it?",
+              "answer": "* **111. `RandomAccess`:** It is a marker interface (zero methods) that signals to algorithms that the collection supports fast, O(1) constant-time random access. `ArrayList` and `Vector` implement it; `LinkedList` does not."
+            },
+            {
+              "id": "cj-112",
+              "question": "112. What is the difference between ArrayList and LinkedList?",
+              "answer": "* **112. `ArrayList` vs `LinkedList`:** `ArrayList` is backed by a dynamic array; it offers fast O(1) reads but slow O(N) insertions/deletions in the middle due to array shifting. `LinkedList` is backed by a doubly-linked list; it has slow O(N) reads but fast O(1) insertions/deletions *only if* you already hold the node reference."
+            },
+            {
+              "id": "cj-113",
+              "question": "113. When would you use LinkedList over ArrayList?",
+              "answer": "* **113. When to prefer `LinkedList`:** Almost never in modern Java. You should only use it if your use case involves a massive amount of insertions/deletions strictly at the head or tail (acting as a Deque) and virtually no random index lookups. Otherwise, `ArrayList` is significantly more CPU-cache friendly."
+            },
+            {
+              "id": "cj-114",
+              "question": "114. What is the internal structure of ArrayList? How does it resize?",
+              "answer": "* **114. `ArrayList` Internal Structure:** It is backed by an `Object[]`. When it reaches capacity, it creates a new, larger array, copies all existing elements over using a highly optimized native `System.arraycopy()` call, and garbage collects the old array."
+            },
+            {
+              "id": "cj-115",
+              "question": "115. What is the default capacity of ArrayList and how does growth work?",
+              "answer": "* **115. Default Capacity & Growth:** The default capacity is 10 (allocated lazily upon adding the first element). When full, it grows by 50% of its current size ($NewCapacity = OldCapacity + (OldCapacity >> 1)$)."
+            },
+            {
+              "id": "cj-116",
+              "question": "116. What is the difference between size() and capacity() in ArrayList?",
+              "answer": "* **116. `size()` vs `capacity()`:** `size()` returns the actual number of elements currently stored in the list. `capacity()` is the total length of the internal array before another resize operation is triggered."
+            },
+            {
+              "id": "cj-117",
+              "question": "117. What is CopyOnWriteArrayList and when would you use it?",
+              "answer": "* **117. `CopyOnWriteArrayList`:** A thread-safe `List` implementation where every mutation (add/set/remove) creates a completely fresh copy of the underlying array. It is highly optimized for scenarios with a massive number of concurrent reads and very few writes (e.g., event listener lists)."
+            },
+            {
+              "id": "cj-118",
+              "question": "118. What is Vector and how is it different from ArrayList?",
+              "answer": "* **118. `Vector` vs `ArrayList`:** `Vector` is a legacy dynamic array where every single method is `synchronized`, making it extremely slow and largely obsolete. `ArrayList` is unsynchronized and faster."
+            },
+            {
+              "id": "cj-119",
+              "question": "119. What are the differences between HashSet, LinkedHashSet, and TreeSet?",
+              "answer": "* **119. `HashSet` vs `LinkedHashSet` vs `TreeSet`:**\n    * `HashSet`: Unordered, O(1) operations, backed by a `HashMap`.\n    * `LinkedHashSet`: Maintains insertion order via a doubly-linked list running through its entries. Slightly higher memory footprint.\n    * `TreeSet`: Maintains sorted order (natural or via Comparator), O(log N) operations, backed by a `TreeMap` (Red-Black Tree)."
+            },
+            {
+              "id": "cj-120",
+              "question": "120. How does HashSet internally work? What does it use under the hood?",
+              "answer": "* **120. `HashSet` Internals:** It literally uses a `HashMap` under the hood. The elements you add to the `HashSet` are stored as the *keys* in the `HashMap`, and a constant, static dummy object (`PRESENT`) is stored as the value."
+            },
+            {
+              "id": "cj-121",
+              "question": "121. How does TreeSet maintain order? What is required for objects stored in it?",
+              "answer": "* **121. `TreeSet` Ordering:** It uses a Red-Black Tree. Elements added to it must either implement the `Comparable` interface, or you must pass a `Comparator` to the `TreeSet` constructor. Otherwise, it throws a `ClassCastException`."
+            },
+            {
+              "id": "cj-122",
+              "question": "122. What happens if you add a duplicate to a HashSet?",
+              "answer": "* **122. Adding Duplicates:** The `add()` method returns `false` and the existing element is retained. The new duplicate object is ignored."
+            },
+            {
+              "id": "cj-123",
+              "question": "123. What is the contract between equals() and hashCode()?",
+              "answer": "* **123. `equals()` and `hashCode()` Contract:** If `a.equals(b)` is true, then `a.hashCode() == b.hashCode()` must strictly be true. However, if two hash codes are equal, the objects do not necessarily have to be equal (this is a hash collision)."
+            },
+            {
+              "id": "cj-124",
+              "question": "124. What is the internal structure of HashMap?",
+              "answer": "* **124. `HashMap` Internals:** It is backed by an array of \"buckets\" (Nodes). Keys are hashed to calculate an array index. Each bucket contains a linked list (or a Red-Black tree) to store entries that hash to the same index."
+            },
+            {
+              "id": "cj-125",
+              "question": "125. What happens during a HashMap collision?",
+              "answer": "* **125. Hash Collisions:** A collision occurs when two distinct keys generate the same hash code or map to the same array index. `HashMap` handles this by chaining the new entry to the end of the linked list residing at that specific bucket."
+            },
+            {
+              "id": "cj-126",
+              "question": "126. What is the load factor and threshold in HashMap?",
+              "answer": "* **126. Load Factor & Threshold:** The load factor (default 0.75) dictates how full the map can get before resizing. The threshold is `Capacity * Load Factor`. Once `size` exceeds the threshold, the underlying array size is doubled."
+            },
+            {
+              "id": "cj-127",
+              "question": "127. What changed in HashMap in Java 8 regarding collision handling?",
+              "answer": "* **127. Java 8 Collision Handling:** To prevent an O(N) performance degradation during severe collisions, Java 8 optimizes the map by converting a bucket's linked list into a Red-Black Tree (O(log N)) once a single bucket reaches 8 elements (and the map's total capacity is at least 64)."
+            },
+            {
+              "id": "cj-128",
+              "question": "128. What is the difference between HashMap, LinkedHashMap, and TreeMap?",
+              "answer": "* **128. `HashMap` vs `LinkedHashMap` vs `TreeMap`:** `HashMap` has unpredictable iteration order. `LinkedHashMap` iterates in the exact order elements were inserted (or accessed). `TreeMap` iterates in a sorted order based on the keys."
+            },
+            {
+              "id": "cj-129",
+              "question": "129. What is ConcurrentHashMap and how is it different from HashMap and Hashtable?",
+              "answer": "* **129. `ConcurrentHashMap` vs others:** `Hashtable` locks the entire map for every operation (severe bottleneck). `HashMap` is entirely thread-unsafe. `ConcurrentHashMap` provides high concurrency and thread safety without locking the entire map, allowing simultaneous reads and writes."
+            },
+            {
+              "id": "cj-130",
+              "question": "130. How does ConcurrentHashMap achieve thread safety without locking the whole map?",
+              "answer": "* **130. `ConcurrentHashMap` Locking:** In Java 8+, it abandons segment locking. It uses CAS (Compare-And-Swap) for non-colliding insertions. If a collision occurs, it synchronizes *only* the specific bucket's head node. This is called fine-grained locking or lock striping."
+            },
+            {
+              "id": "cj-131",
+              "question": "131. What is computeIfAbsent, merge, and getOrDefault in Map?",
+              "answer": "* **131. Modern Map Methods:**\n    * `computeIfAbsent`: Calculates and inserts a value only if the key is currently missing.\n    * `merge`: Combines an existing value with a new one using a provided `BiFunction`.\n    * `getOrDefault`: Returns the mapped value, or a specified fallback value if the key does not exist."
+            },
+            {
+              "id": "cj-132",
+              "question": "132. What happens if you use a mutable object as a HashMap key?",
+              "answer": "* **132. Mutable Objects as Keys:** This is a fatal bug. If you use a mutable object as a key and later change its state, its `hashCode()` will change. The map will look in the wrong bucket and never find the object again, leading to memory leaks and broken logic."
+            },
+            {
+              "id": "cj-133",
+              "question": "133. What is WeakHashMap and when would you use it?",
+              "answer": "* **133. `WeakHashMap`:** A map where keys are wrapped in `WeakReference` objects. If a key is no longer strongly referenced elsewhere in the application, the Garbage Collector will proactively delete the entire entry from the map. Excellent for building caches."
+            },
+            {
+              "id": "cj-134",
+              "question": "134. What is EnumMap and why is it more efficient than HashMap for enum keys?",
+              "answer": "* **134. `EnumMap`:** Highly optimized for Enum keys. Instead of calculating hash codes, it maps the enum's `ordinal()` value directly to an index in a flat, pre-sized array. It guarantees zero collisions, true O(1) performance, and extreme memory efficiency."
+            },
+            {
+              "id": "cj-135",
+              "question": "135. What is the difference between Queue and Deque?",
+              "answer": "* **135. `Queue` vs `Deque`:** A `Queue` is strictly FIFO (First-In-First-Out), inserting at the tail and removing from the head. A `Deque` (Double Ended Queue) allows insertion, removal, and peeking from *both* ends."
+            },
+            {
+              "id": "cj-136",
+              "question": "136. What is the difference between offer(), add(), poll(), remove(), peek(), and element()?",
+              "answer": "* **136. Exceptions vs. Special Values:**\n    * `add()`, `remove()`, `element()`: Throw exceptions if the queue is full or empty.\n    * `offer()`, `poll()`, `peek()`: Return special values (`false` or `null`) instead of throwing exceptions."
+            },
+            {
+              "id": "cj-137",
+              "question": "137. What is PriorityQueue and how does it order elements?",
+              "answer": "* **137. `PriorityQueue`:** Elements are dynamically sorted into a heap structure based on natural ordering (`Comparable`) or a `Comparator`. It does not maintain a fully sorted list, but guarantees the head of the queue is always the \"smallest\" or highest-priority element."
+            },
+            {
+              "id": "cj-138",
+              "question": "138. What is ArrayDeque and when would you prefer it over LinkedList as a queue?",
+              "answer": "* **138. `ArrayDeque` vs `LinkedList`:** `ArrayDeque` is backed by a resizable circular array. It is significantly faster and more memory-efficient than `LinkedList` because it avoids the overhead of instantiating node objects for every insertion."
+            },
+            {
+              "id": "cj-139",
+              "question": "139. What is BlockingQueue and where is it used?",
+              "answer": "* **139. `BlockingQueue`:** A thread-safe queue essential for Producer-Consumer patterns. It provides `put()` and `take()` methods that force a thread to block (wait) if the queue is full or empty, respectively."
+            },
+            {
+              "id": "cj-140",
+              "question": "140. What is the difference between Comparable and Comparator?",
+              "answer": "* **140. `Comparable` vs `Comparator`:** `Comparable` is implemented directly inside the domain class (e.g., `Employee implements Comparable`) to define its single, default \"natural\" sorting logic. `Comparator` is an external interface used to define custom, multiple sorting rules outside the class."
+            },
+            {
+              "id": "cj-141",
+              "question": "141. When would you use Comparator over Comparable?",
+              "answer": "* **141. When to use `Comparator`:** Use it when you cannot modify the source code of a class (like `String`), when you need multiple ways to sort the same object (e.g., sort `Employee` by age, then by salary), or when you want to keep sorting logic out of the domain model."
+            },
+            {
+              "id": "cj-142",
+              "question": "142. What is Comparator.comparing() and how do you chain comparators?",
+              "answer": "* **142. `Comparator.comparing()`:** A Java 8 feature that uses method references for clean, readable sorting logic (e.g., `Comparator.comparing(User::getLastName)`). Chaining is done seamlessly: `.thenComparing(User::getFirstName)`."
+            },
+            {
+              "id": "cj-143",
+              "question": "143. What is natural ordering?",
+              "answer": "* **143. Natural Ordering:** The default sorting behavior defined by a class's internal `compareTo()` implementation (e.g., alphabetical for Strings, numerical for Integers)."
+            },
+            {
+              "id": "cj-144",
+              "question": "144. How does TreeMap or TreeSet use Comparable/Comparator?",
+              "answer": "* **144. Trees and Comparators:** `TreeMap` and `TreeSet` rely on these interfaces to build their Red-Black trees. If objects lack natural ordering and no explicit `Comparator` is provided, a `ClassCastException` is thrown."
+            },
+            {
+              "id": "cj-145",
+              "question": "145. What is a fail-fast iterator? Give an example.",
+              "answer": "* **145. Fail-fast iterator:** An iterator that aggressively throws a `ConcurrentModificationException` if it detects that the underlying collection has been structurally modified (add/remove) after the iterator was created. Example: `ArrayList` or `HashMap` iterators."
+            },
+            {
+              "id": "cj-146",
+              "question": "146. What is ConcurrentModificationException and when does it occur?",
+              "answer": "* **146. `ConcurrentModificationException`:** Fail-fast collections maintain an internal `modCount` variable. The iterator tracks the `expectedModCount`. If `modCount != expectedModCount` during iteration, the exception is thrown to prevent unpredictable, dirty reads."
+            },
+            {
+              "id": "cj-147",
+              "question": "147. What is a fail-safe iterator? Which collections use it?",
+              "answer": "* **147. Fail-safe iterators:** Iterators that do not throw exceptions upon concurrent modification, typically because they iterate over a snapshot or clone of the data at the time of creation. Example: Iterators from `CopyOnWriteArrayList` or `ConcurrentHashMap`."
+            },
+            {
+              "id": "cj-148",
+              "question": "148. Can you modify a collection while iterating using Iterator.remove()?",
+              "answer": "* **148. `Iterator.remove()`:** Yes. It is the only safe way to remove an element during traversal with a fail-fast iterator. It safely updates the internal `modCount` so the iterator remains in sync with the collection."
+            }
+          ]
+        },
+        {
+          "id": "java-8-features",
+          "title": "Java 8+ Features",
+          "questions": [
+            {
+              "id": "cj-149",
+              "question": "149. What is a lambda expression and what problem does it solve?",
+              "answer": "* **149. Lambda expression & problem solved:** A lambda is an anonymous, block-like function that can be passed around as a variable. It solves the extreme verbosity of anonymous inner classes and enables functional-style programming in Java."
+            },
+            {
+              "id": "cj-150",
+              "question": "150. What are the built-in functional interfaces in java.util.function?",
+              "answer": "* **150. Built-in functional interfaces:** The core ones in `java.util.function` are `Function`, `Consumer`, `Supplier`, and `Predicate`."
+            },
+            {
+              "id": "cj-151",
+              "question": "151. What is the difference between Function, BiFunction, Consumer, Supplier, Predicate?",
+              "answer": "* **151. Core interface differences:**\n    * **`Function<T, R>`:** Takes an argument `T`, returns a result `R` (used in `map`).\n    * **`BiFunction<T, U, R>`:** Takes two arguments `T` and `U`, returns a result `R`.\n    * **`Consumer<T>`:** Takes an argument `T`, returns `void` (used in `forEach`).\n    * **`Supplier<T>`:** Takes no arguments, returns a result `T` (used in `orElseGet`).\n    * **`Predicate<T>`:** Takes an argument `T`, returns a `boolean` (used in `filter`)."
+            },
+            {
+              "id": "cj-152",
+              "question": "152. What is a method reference and what are its four types?",
+              "answer": "* **152. Method References & Types:** A shorthand syntax (`::`) for a lambda that does nothing but call an existing method. The four types are: Static method (`Math::max`), Instance method of a specific object (`System.out::println`), Instance method of an arbitrary object of a given type (`String::toLowerCase`), and Constructor reference (`ArrayList::new`)."
+            },
+            {
+              "id": "cj-153",
+              "question": "153. What is the difference between a lambda and an anonymous inner class?",
+              "answer": "* **153. Lambda vs. Anonymous Inner Class:** An anonymous inner class generates a physical `.class` file at compile time and establishes its own scope (`this` refers to the inner class). A lambda uses `invokedynamic` at runtime, does not create a new class file, and captures the scope of the enclosing class (`this` refers to the outer class)."
+            },
+            {
+              "id": "cj-154",
+              "question": "154. Can a lambda expression throw a checked exception?",
+              "answer": "* **154. Checked exceptions in lambdas:** A lambda can only throw a checked exception if the functional interface's abstract method explicitly declares a `throws` clause. Since the standard `java.util.function` interfaces do not, you must wrap checked exceptions in a `try-catch` inside the lambda, or write a custom functional interface."
+            },
+            {
+              "id": "cj-155",
+              "question": "155. What is the difference between Runnable and Callable?",
+              "answer": "* **155. `Runnable` vs `Callable`:** Both represent tasks to be executed concurrently. `Runnable`'s `run()` method returns `void` and cannot throw checked exceptions. `Callable<V>`'s `call()` method returns a generic value `<V>` and is permitted to throw an `Exception`."
+            },
+            {
+              "id": "cj-156",
+              "question": "156. What is the Stream API and how is it different from a for loop?",
+              "answer": "* **156. Streams vs. `for` loop:** A `for` loop is imperative (telling the computer *how* to iterate step-by-step). The Stream API is declarative (telling the computer *what* you want to achieve). Streams support lazy evaluation and effortless parallelization."
+            },
+            {
+              "id": "cj-157",
+              "question": "157. What is the difference between intermediate and terminal operations?",
+              "answer": "* **157. Intermediate vs. Terminal operations:** Intermediate operations (like `filter`, `map`) return another Stream and do not process data immediately. Terminal operations (like `collect`, `count`) trigger the pipeline execution and return a final, non-stream result."
+            },
+            {
+              "id": "cj-158",
+              "question": "158. What does it mean for streams to be lazy?",
+              "answer": "* **158. Lazy evaluation:** Intermediate operations are not executed until a terminal operation is invoked. This allows the JVM to optimize the pipeline, such as fusing multiple operations or short-circuiting (stopping early) when using `findFirst()` or `limit()`."
+            },
+            {
+              "id": "cj-159",
+              "question": "159. What is the difference between map() and flatMap()?",
+              "answer": "* **159. `map()` vs `flatMap()`:** `map()` transforms each element into exactly one new element (1-to-1). `flatMap()` transforms each element into a *Stream* of new elements, and then \"flattens\" all those streams into a single, continuous stream (1-to-N)."
+            },
+            {
+              "id": "cj-160",
+              "question": "160. What is the difference between findFirst() and findAny()?",
+              "answer": "* **160. `findFirst()` vs `findAny()`:** `findFirst()` strictly guarantees returning the very first element defined by the encounter order. `findAny()` returns any matching element and is highly optimized for parallel streams, where enforcing the encounter order would cause severe performance bottlenecks."
+            },
+            {
+              "id": "cj-161",
+              "question": "161. What is the difference between forEach() and forEachOrdered()?",
+              "answer": "* **161. `forEach()` vs `forEachOrdered()`:** In a sequential stream, they behave the same. In a parallel stream, `forEach()` prints elements in completely random order depending on thread completion. `forEachOrdered()` forces the parallel stream to buffer results and process them in the original strict encounter order."
+            },
+            {
+              "id": "cj-162",
+              "question": "162. What is the difference between reduce() and collect()?",
+              "answer": "* **162. `reduce()` vs `collect()`:** `reduce()` repeatedly combines elements using an accumulator to produce a single, typically immutable value (like a sum). `collect()` gathers elements into a mutable container (like appending to a `List` or `Map`)."
+            },
+            {
+              "id": "cj-163",
+              "question": "163. What are Collectors.toList(), groupingBy(), partitioningBy(), joining()?",
+              "answer": "* **163. Common Collectors:**\n    * `toList()`: Gathers the stream stream into a `List`.\n    * `groupingBy()`: Groups elements into a `Map` based on a classifier function.\n    * `partitioningBy()`: Divides elements into a `Map<Boolean, List>` based on a predicate.\n    * `joining()`: Concatenates stream elements into a single `String`, optionally with delimiters."
+            },
+            {
+              "id": "cj-164",
+              "question": "164. What is a parallel stream and when should you use it?",
+              "answer": "* **164. Parallel stream usage:** Use it for computationally heavy operations on massive datasets where elements are completely independent. Under the hood, it splits the data and distributes it across the shared `ForkJoinPool`."
+            },
+            {
+              "id": "cj-165",
+              "question": "165. What are the dangers of parallel streams?",
+              "answer": "* **165. Dangers of parallel streams:** * Thread context-switching overhead can make it *slower* than sequential streams for small datasets.\n    * State mutation inside the pipeline leads to severe race conditions.\n    * Blocking I/O operations (like database calls) inside a parallel stream will exhaust the JVM's common `ForkJoinPool`, freezing other parallel tasks across the application."
+            },
+            {
+              "id": "cj-166",
+              "question": "166. Can you reuse a stream after a terminal operation?",
+              "answer": "* **166. Reusing a stream:** No. Once a terminal operation executes, the stream is fully consumed. Attempting to reuse the stream reference will throw an `IllegalStateException`."
+            },
+            {
+              "id": "cj-167",
+              "question": "167. What is Stream.of() vs Arrays.stream() vs Collection.stream()?",
+              "answer": "* **167. Creation methods:** `Stream.of(1, 2, 3)` creates a stream from specific values. `Arrays.stream(arr)` wraps an array. `collection.stream()` converts a `List` or `Set` into a stream."
+            },
+            {
+              "id": "cj-168",
+              "question": "168. How do you handle checked exceptions inside a stream pipeline?",
+              "answer": "* **168. Handling checked exceptions:** Either handle it with an ugly `try/catch` inside the lambda, write a wrapper utility method that catches the exception and rethrows it as an unchecked `RuntimeException`, or use a library like Vavr (`Try`)."
+            },
+            {
+              "id": "cj-169",
+              "question": "169. What is peek() used for and what are its gotchas?",
+              "answer": "* **169. `peek()` and its gotchas:** It is used primarily for debugging to view elements mid-pipeline without consuming them. The major gotcha: modern JVMs will optimize `peek()` out of existence if the terminal operation doesn't explicitly require the elements to be processed (e.g., calling `count()` on a sized stream)."
+            },
+            {
+              "id": "cj-170",
+              "question": "170. What is the difference between stream().filter().findFirst() vs a for-loop with a break?",
+              "answer": "* **170. `stream().filter().findFirst()` vs for-loop break:** Semantically, they both short-circuit and stop execution upon finding a match. However, the imperative `for` loop is slightly faster due to avoiding Stream creation overhead, while the Stream version is significantly more readable and declarative."
+            },
+            {
+              "id": "cj-171",
+              "question": "171. What is Optional and what problem does it solve?",
+              "answer": "* **171. `Optional` & problem solved:** It is a container object that may or may not contain a non-null value. It solves the \"Billion Dollar Mistake\" (`NullPointerException`) by forcing the developer's code to explicitly handle the case where a value is absent."
+            },
+            {
+              "id": "cj-172",
+              "question": "172. What is the difference between Optional.of(), Optional.ofNullable(), and Optional.empty()?",
+              "answer": "* **172. Creation methods:** * `Optional.of(value)`: Returns an Optional, but immediately throws NPE if the value is null.\n    * `Optional.ofNullable(value)`: Safely returns an Optional containing the value, or an empty Optional if the value is null.\n    * `Optional.empty()`: Explicitly returns an empty Optional."
+            },
+            {
+              "id": "cj-173",
+              "question": "173. What is the difference between get(), orElse(), orElseGet(), and orElseThrow()?",
+              "answer": "* **173. Unwrapping methods:**\n    * `get()`: Returns the value, but throws `NoSuchElementException` if empty. (Considered bad practice to use directly).\n    * `orElse(fallback)`: Returns the value, or the fallback if empty.\n    * `orElseGet(Supplier)`: Returns the value, or executes the Supplier to generate a fallback lazily.\n    * `orElseThrow()`: Returns the value, or throws a specified exception if empty."
+            },
+            {
+              "id": "cj-174",
+              "question": "174. What is the performance difference between orElse() and orElseGet()?",
+              "answer": "* **174. `orElse()` vs `orElseGet()` performance:** `orElse(methodCall())` evaluates the method call *every single time*, regardless of whether the Optional is empty or full (wasting CPU/DB calls). `orElseGet(() -> methodCall())` only executes the lambda if the Optional is genuinely empty."
+            },
+            {
+              "id": "cj-175",
+              "question": "175. Is it good practice to use Optional as a method parameter or field? Why or why not?",
+              "answer": "* **175. Anti-patterns (Fields and Parameters):** It is an anti-pattern to use `Optional` as a class field because it is not `Serializable`. It is also poor practice to use it as a method parameter because it forces callers to clutter their code by wrapping arguments in `Optional.of()`. It is designed strictly to be used as a *return type*."
+            },
+            {
+              "id": "cj-176",
+              "question": "176. How do you chain Optional operations using map() and flatMap()?",
+              "answer": "* **176. Chaining operations:** `map()` transforms the value inside the Optional and automatically wraps the result in a new Optional. `flatMap()` is used when the transformation function *itself* returns an Optional, preventing a deeply nested `Optional<Optional<T>>` structure."
+            },
+            {
+              "id": "cj-177",
+              "question": "177. Why were default methods introduced in Java 8?",
+              "answer": "* **177. Purpose of default methods:** They were introduced strictly for backward compatibility. They allow architects to add new methods to existing interfaces without breaking the thousands of legacy classes that already implement those interfaces."
+            },
+            {
+              "id": "cj-178",
+              "question": "178. What problem do default methods solve in the Collections framework specifically?",
+              "answer": "* **178. Problem solved in Collections:** It allowed the Java designers to seamlessly add the `stream()`, `parallelStream()`, `forEach()`, and `removeIf()` methods to the core `Collection` and `Iterable` interfaces in Java 8 without breaking a single existing Java application."
+            },
+            {
+              "id": "cj-179",
+              "question": "179. How is conflict resolved when two interfaces provide the same default method?",
+              "answer": "* **179. Interface collision:** If a class implements two interfaces that both declare the exact same default method signature, the Java compiler throws a compilation error. The class must resolve the conflict by explicitly overriding the method and providing its own implementation (or delegating via `InterfaceA.super.methodName()`)."
+            },
+            {
+              "id": "cj-180",
+              "question": "180. What was wrong with java.util.Date and Calendar?",
+              "answer": "* **180. The problem with legacy `Date`/`Calendar`:** They were mutable (causing severe thread-safety bugs), poorly designed (`java.util.Date` inexplicably contained both date and time, despite the name), and counter-intuitive (months were 0-indexed, meaning 0 = January)."
+            },
+            {
+              "id": "cj-181",
+              "question": "181. What is the difference between LocalDate, LocalTime, LocalDateTime, and ZonedDateTime?",
+              "answer": "* **181. Core Classes:**\n    * `LocalDate`: Just the date (e.g., 2023-10-05).\n    * `LocalTime`: Just the time (e.g., 14:30:00).\n    * `LocalDateTime`: Date and time, but disconnected from any timezone context (e.g., an alarm clock setting).\n    * `ZonedDateTime`: Date, time, and an explicit geographical timezone/offset (vital for cross-border applications)."
+            },
+            {
+              "id": "cj-182",
+              "question": "182. What is Instant and when would you use it over LocalDateTime?",
+              "answer": "* **182. `Instant` vs `LocalDateTime`:** `Instant` represents a specific, single point on the global timeline (nanoseconds since the UNIX epoch, UTC). It is perfect for logging, database timestamps, and event ordering. `LocalDateTime` is purely human time and cannot determine an exact moment without knowing the timezone."
+            },
+            {
+              "id": "cj-183",
+              "question": "183. What is Duration vs Period?",
+              "answer": "* **183. `Duration` vs `Period`:** `Duration` measures an amount of time based on strict time-units (hours, minutes, seconds, nanoseconds). `Period` measures an amount of time based on human calendar-units (years, months, days, accounting for leap years and different month lengths)."
+            },
+            {
+              "id": "cj-184",
+              "question": "184. How do you parse and format dates using DateTimeFormatter?",
+              "answer": "* **184. Parsing and Formatting:** You use `DateTimeFormatter`. To format: `myLocalDate.format(DateTimeFormatter.ofPattern(\"dd-MM-yyyy\"))`. To parse: `LocalDate.parse(\"25-12-2023\", DateTimeFormatter.ofPattern(\"dd-MM-yyyy\"))`."
+            },
+            {
+              "id": "cj-185",
+              "question": "185. Why is the new Date/Time API considered thread-safe?",
+              "answer": "* **185. Thread Safety:** The entire `java.time` package is completely immutable. When you call `date.plusDays(1)`, it does not alter the original object; it constructs and returns a brand new `LocalDate` instance. This guarantees zero race conditions in multi-threaded environments."
+            }
+          ]
+        },
+        {
+          "id": "exception-handling",
+          "title": "Exception Handling",
+          "questions": [
+            {
+              "id": "cj-186",
+              "question": "186. What is the exception hierarchy in Java?",
+              "answer": "* **186. Exception Hierarchy:** The root class is `java.lang.Throwable`. It splits into two main branches: `Error` and `Exception`. The `Exception` branch further splits into `RuntimeException` (unchecked) and all other exceptions (checked)."
+            },
+            {
+              "id": "cj-187",
+              "question": "187. What is the difference between Error and Exception?",
+              "answer": "* **187. `Error` vs. `Exception`:** * **`Error`:** Represents severe, unrecoverable JVM-level problems (e.g., `OutOfMemoryError`, `StackOverflowError`). Applications should never attempt to catch or handle them.\n    * **`Exception`:** Represents conditions that a reasonable application might want to catch, handle, and recover from."
+            },
+            {
+              "id": "cj-188",
+              "question": "188. What is the difference between checked and unchecked exceptions?",
+              "answer": "* **188. Checked vs. Unchecked Exceptions:** * **Checked:** Extend `Exception` (but not `RuntimeException`). The compiler strictly enforces that you either wrap them in a `try-catch` block or declare them in a `throws` clause.\n    * **Unchecked:** Extend `RuntimeException`. The compiler does not mandate handling them. They usually represent programming logic flaws (e.g., `NullPointerException`, `IndexOutOfBoundsException`)."
+            },
+            {
+              "id": "cj-189",
+              "question": "189. When should you use a checked vs unchecked exception?",
+              "answer": "* **189. When to use which:** Use **checked exceptions** for anticipated, recoverable conditions outside the program's control (e.g., file missing, network timeout). Use **unchecked exceptions** for programming errors or unrecoverable states where the application must fail-fast. *Note: Modern Java frameworks (like Spring) heavily prefer unchecked exceptions to avoid cluttering method signatures.*"
+            },
+            {
+              "id": "cj-190",
+              "question": "190. What is the difference between throw and throws?",
+              "answer": "* **190. `throw` vs. `throws`:** `throw` is used *inside* the method body to actively instantiate and trigger an exception (`throw new IllegalArgumentException();`). `throws` is used in the method *signature* to warn callers that the method might propagate an exception up the call stack."
+            },
+            {
+              "id": "cj-191",
+              "question": "191. What happens in a finally block if the try block has a return statement?",
+              "answer": "* **191. `finally` block with a `try` block `return`:** The `finally` block is guaranteed to execute *before* the `try` block actually returns control to the caller. If the `finally` block itself contains a `return` statement, it will completely override and discard the `try` block's return value—a severe anti-pattern."
+            },
+            {
+              "id": "cj-192",
+              "question": "192. Can a finally block itself throw an exception?",
+              "answer": "* **192. `finally` block throwing an exception:** Yes, it can. If this happens, the exception thrown by the `finally` block will aggressively propagate up the stack, entirely masking (overwriting) any exception that might have been thrown in the original `try` block. This makes debugging a nightmare."
+            },
+            {
+              "id": "cj-193",
+              "question": "193. What is exception chaining and why is it useful?",
+              "answer": "* **193. Exception Chaining:** This is the practice of catching a low-level exception and throwing a higher-level, business-specific exception while passing the original exception as the \"cause\" (`throw new DatabaseException(\"Failed to load user\", sqlException);`). It prevents leaking implementation details to upper layers while preserving the original stack trace for debugging."
+            },
+            {
+              "id": "cj-194",
+              "question": "194. What is try-with-resources and what interface must a resource implement?",
+              "answer": "* **194. Try-with-resources:** Introduced in Java 7, it guarantees that resources (like streams, connections) are automatically closed when the `try` block exits, regardless of whether an exception occurred. To be used here, the resource class must implement the `java.lang.AutoCloseable` (or `java.io.Closeable`) interface."
+            },
+            {
+              "id": "cj-195",
+              "question": "195. What is a multi-catch block?",
+              "answer": "* **195. Multi-catch block:** A feature that allows catching multiple distinct exceptions in a single `catch` clause using the pipe operator (`catch (IOException | SQLException e)`). This removes duplicate code. Note that the caught exception parameter `e` becomes implicitly `final` and cannot be reassigned."
+            },
+            {
+              "id": "cj-196",
+              "question": "196. What is the difference between getMessage(), getCause(), and printStackTrace()?",
+              "answer": "* **196. `getMessage()` vs. `getCause()` vs. `printStackTrace()`:**\n    * `getMessage()`: Returns the basic string description of the error.\n    * `getCause()`: Returns the underlying chained `Throwable` that triggered this exception (or null if none).\n    * `printStackTrace()`: Dumps the exception class, message, and the exact method execution hierarchy to the standard error stream. (Should be avoided in production in favor of logging frameworks)."
+            },
+            {
+              "id": "cj-197",
+              "question": "197. Should you ever catch Exception or Throwable directly?",
+              "answer": "* **197. Catching `Exception` or `Throwable` directly:** As a rule, **no**. Catching `Exception` is dangerous because it masks critical `RuntimeException` bugs (like a `NullPointerException` that you need to fix, not hide). Catching `Throwable` is even worse because you are catching JVM `Error`s that your application cannot possibly recover from. Always catch the most specific exception possible."
+            },
+            {
+              "id": "cj-198",
+              "question": "198. What are some common anti-patterns in exception handling?",
+              "answer": "* **198. Common Exception Anti-patterns:**\n    * Using exceptions for standard control flow (acting like a `goto` statement).\n    * Logging an exception *and* throwing it (results in duplicate log entries across the system).\n    * Empty `catch` blocks.\n    * Catching a checked exception and throwing a new `RuntimeException` without chaining the original cause."
+            },
+            {
+              "id": "cj-199",
+              "question": "199. What is exception swallowing and why is it dangerous?",
+              "answer": "* **199. Exception Swallowing:** Catching an exception and doing absolutely nothing (or just calling `System.out.println` instead of using a proper logger). It is incredibly dangerous because the application silently continues in a corrupted or invalid state, making the root cause almost impossible to trace when the system eventually crashes later."
+            },
+            {
+              "id": "cj-200",
+              "question": "200. How do you design a custom exception hierarchy for an application?",
+              "answer": "* **200. Designing a custom exception hierarchy:** Start by extending `RuntimeException` for your application's base exception. Create specific subclasses for distinct domains (e.g., `ValidationException`, `ResourceNotFoundException`). Always implement constructors that accept a message and a `Throwable` cause to mandate proper exception chaining throughout the application."
             }
           ]
         },
@@ -64,14 +1054,453 @@
           "title": "Multithreading & Concurrency",
           "questions": [
             {
-              "id": "cj-9",
-              "question": "What is the difference between Thread and Runnable?",
-              "answer": "Thread is a class you extend to create a thread; Runnable is an interface you implement. Implementing Runnable is preferred because Java doesn't support multiple inheritance — your class can still extend another class. Runnable also separates the task from the thread mechanism, enabling better design. With lambdas (Java 8+), Runnable can be written as () -> { task logic }."
+              "id": "cj-201",
+              "question": "201. What is a thread and how is it different from a process?",
+              "answer": "* **201. Thread vs Process:** A process is an independent execution environment with its own dedicated memory space (Heap) provided by the OS. A thread is a lightweight unit of execution *within* a process; threads share the process's memory (Heap) but have their own execution stack and program counter."
             },
             {
-              "id": "cj-10",
-              "question": "What is the volatile keyword in Java?",
-              "answer": "volatile guarantees visibility of changes to a variable across threads. Without volatile, each thread may cache a variable locally. Marking it volatile forces reads/writes to go directly to main memory. It does NOT guarantee atomicity — for compound operations (i++), use AtomicInteger or synchronized. Use volatile for flags like boolean stopFlag = true that one thread writes and others read."
+              "id": "cj-202",
+              "question": "202. What are the different ways to create a thread in Java?",
+              "answer": "* **202. Creating a thread:** Traditionally, by extending the `Thread` class or implementing the `Runnable` interface (preferred). In modern Java, you use an `ExecutorService` to manage thread pools. *Note: As of Java 21, you also have Virtual Threads (`Thread.ofVirtual().start()`), which are managed by the JVM rather than mapped 1:1 to OS threads.*"
+            },
+            {
+              "id": "cj-203",
+              "question": "203. What is the difference between Thread.start() and Thread.run()?",
+              "answer": "* **203. `Thread.start()` vs `Thread.run()`:** `start()` natively instructs the OS to create a brand new call stack and executes the `run()` method inside that new thread. Calling `run()` directly simply executes the method sequentially in the *current* thread, completely defeating the purpose of multithreading."
+            },
+            {
+              "id": "cj-204",
+              "question": "204. What are the different states in a thread lifecycle?",
+              "answer": "* **204. Thread Lifecycle States:** `NEW` (created, not started), `RUNNABLE` (executing or ready to execute), `BLOCKED` (waiting for a monitor lock), `WAITING` (waiting indefinitely for another thread's signal), `TIMED_WAITING` (waiting for a specified time), and `TERMINATED` (execution completed)."
+            },
+            {
+              "id": "cj-205",
+              "question": "205. What is the difference between sleep(), wait(), yield(), and join()?",
+              "answer": "* **205. `sleep()` vs `wait()` vs `yield()` vs `join()`:**\n    * `sleep()`: Pauses the current thread for a specific time. **Does not release locks.**\n    * `wait()`: Pauses the thread until notified. **Must be called from a synchronized block, and it completely releases the monitor lock.**\n    * `yield()`: A hint to the thread scheduler to pause the current thread and give other threads of the same priority a chance to run. (Rarely used/reliable).\n    * `join()`: Forces the current thread to block and wait until the thread on which `join()` was called terminates."
+            },
+            {
+              "id": "cj-206",
+              "question": "206. What is a daemon thread?",
+              "answer": "* **206. Daemon Thread:** A low-priority background thread (like Garbage Collection) that provides services to user threads. The JVM will forcefully terminate itself if the only threads left running are daemon threads."
+            },
+            {
+              "id": "cj-207",
+              "question": "207. What is thread priority and does it guarantee execution order?",
+              "answer": "* **207. Thread priority:** It ranges from 1 (`MIN_PRIORITY`) to 10 (`MAX_PRIORITY`). However, it does **not** guarantee execution order. It is merely a hint to the underlying OS scheduler, and heavily relying on thread priorities is a severe anti-pattern that leads to platform-dependent bugs."
+            },
+            {
+              "id": "cj-208",
+              "question": "208. What is a race condition? Give a concrete example.",
+              "answer": "* **208. Race Condition:** A concurrency bug that occurs when two or more threads access shared data simultaneously, and the final state depends entirely on the unpredictable scheduling of the threads. *Example:* Two threads simultaneously read a bank balance of $100, both add $50, and both write back $150. One $50 deposit is permanently lost."
+            },
+            {
+              "id": "cj-209",
+              "question": "209. What does the synchronized keyword do?",
+              "answer": "* **209. `synchronized` keyword:** It enforces mutual exclusion. It ensures that only one thread can execute a block of code or a method on a given object's monitor at a time, preventing race conditions. It also guarantees memory visibility (flushing CPU caches to main memory)."
+            },
+            {
+              "id": "cj-210",
+              "question": "210. What is the difference between a synchronized method and a synchronized block?",
+              "answer": "* **210. Synchronized method vs block:** A synchronized method locks the entire object instance (`this`). A synchronized block allows you to lock only a specific, critical section of code using a specific object reference, vastly reducing lock contention and improving throughput."
+            },
+            {
+              "id": "cj-211",
+              "question": "211. What is intrinsic lock / monitor lock?",
+              "answer": "* **211. Intrinsic lock / monitor lock:** Every object in Java has a built-in, hidden lock called a monitor. When a thread enters a `synchronized` block, it acquires this intrinsic lock. Any other thread attempting to synchronize on that exact same object will be put into the `BLOCKED` state until the first thread exits."
+            },
+            {
+              "id": "cj-212",
+              "question": "212. What is volatile and when is it not enough?",
+              "answer": "* **212. `volatile` and when it's not enough:** `volatile` guarantees memory visibility (threads always read the latest value directly from main memory, not from their local CPU cache). However, it is **not enough** for compound operations like `count++` (read-modify-write), because it provides zero atomicity."
+            },
+            {
+              "id": "cj-213",
+              "question": "213. What is the difference between volatile and synchronized?",
+              "answer": "* **213. `volatile` vs `synchronized`:** `volatile` is lock-free, lightweight, and only guarantees visibility. `synchronized` is a heavier locking mechanism that guarantees both visibility *and* atomicity (mutual exclusion)."
+            },
+            {
+              "id": "cj-214",
+              "question": "214. What is a deadlock? How do you detect and prevent it?",
+              "answer": "* **214. Deadlock (Detection & Prevention):** A deadlock occurs when Thread A holds Lock 1 and waits for Lock 2, while Thread B holds Lock 2 and waits for Lock 1. Both wait forever. *Detect:* Use JConsole, VisualVM, or thread dumps. *Prevent:* Always acquire multiple locks in the exact same, strict global order across all threads."
+            },
+            {
+              "id": "cj-215",
+              "question": "215. What is a livelock vs a deadlock?",
+              "answer": "* **215. Livelock vs Deadlock:** In a deadlock, threads are completely frozen (`BLOCKED`). In a livelock, threads are technically active and changing state, but they are stuck in an endless loop responding to each other, making zero actual progress (like two people trying to pass each other in a hallway, repeatedly stepping into the same side)."
+            },
+            {
+              "id": "cj-216",
+              "question": "216. What is thread starvation?",
+              "answer": "* **216. Thread Starvation:** When a low-priority thread is perpetually denied access to CPU time or a lock because high-priority or greedy threads are constantly monopolizing the resources."
+            },
+            {
+              "id": "cj-217",
+              "question": "217. What is ReentrantLock and how is it different from synchronized?",
+              "answer": "* **217. `ReentrantLock` vs `synchronized`:** `ReentrantLock` is an explicit lock implementation. It provides advanced features that `synchronized` lacks: the ability to try acquiring a lock without blocking forever (`tryLock()`), interruptible lock waits (`lockInterruptibly()`), and fairness policies (granting locks to the longest-waiting thread)."
+            },
+            {
+              "id": "cj-218",
+              "question": "218. What is ReadWriteLock and when would you use it?",
+              "answer": "* **218. `ReadWriteLock`:** It maintains a pair of associated locks. It allows multiple threads to read shared data concurrently (massive performance boost), but enforces exclusive access when a thread wants to write to the data. Used in read-heavy caching scenarios."
+            },
+            {
+              "id": "cj-219",
+              "question": "219. What is CountDownLatch vs CyclicBarrier vs Semaphore?",
+              "answer": "* **219. Concurrency Utilities:**\n    * `CountDownLatch`: Threads wait until a fixed counter decrements to zero. It cannot be reset. (e.g., main thread waits for 3 services to start).\n    * `CyclicBarrier`: Threads wait for each other to reach a common barrier point before proceeding. It *can* be reset and reused.\n    * `Semaphore`: Maintains a set of permits. Used to restrict the number of concurrent threads accessing a specific physical or logical resource (e.g., limiting database connections to 10)."
+            },
+            {
+              "id": "cj-220",
+              "question": "220. What is an ExecutorService and why is it preferred over creating threads manually?",
+              "answer": "* **220. `ExecutorService` vs manual threads:** Creating `new Thread().start()` is extremely expensive in terms of OS overhead, and unbounded creation causes `OutOfMemoryError`s. `ExecutorService` abstracts thread management, reusing a pool of initialized threads to execute tasks efficiently and safely."
+            },
+            {
+              "id": "cj-221",
+              "question": "221. What are the different types of thread pools in Executors?",
+              "answer": "* **221. Types of thread pools:**\n    * `FixedThreadPool`: A pool with a fixed, maximum number of threads.\n    * `CachedThreadPool`: Creates new threads as needed but reuses idle ones. Ideal for massive numbers of short-lived tasks.\n    * `SingleThreadExecutor`: Guarantees tasks execute sequentially using exactly one thread.\n    * `ScheduledThreadPool`: Used to execute tasks after a delay or periodically."
+            },
+            {
+              "id": "cj-222",
+              "question": "222. What is Callable vs Runnable and what does Future represent?",
+              "answer": "* **222. `Callable` vs `Runnable` & `Future`:** Both represent tasks. `Runnable` cannot return a result or throw checked exceptions. `Callable` returns a result and can throw exceptions. Submitting a `Callable` to an Executor returns a `Future`, which acts as a proxy object representing the pending, asynchronous result."
+            },
+            {
+              "id": "cj-223",
+              "question": "223. What is CompletableFuture and how is it different from Future?",
+              "answer": "* **223. `CompletableFuture` vs `Future`:** Standard `Future` is blocking (you must call `.get()`, pausing the thread). `CompletableFuture` (Java 8) allows non-blocking, reactive programming by registering callbacks that execute automatically when the asynchronous computation finishes."
+            },
+            {
+              "id": "cj-224",
+              "question": "224. What are thenApply(), thenCompose(), thenCombine(), and exceptionally() in CompletableFuture?",
+              "answer": "* **224. `CompletableFuture` Methods:**\n    * `thenApply()`: Transforms the result of the previous stage (like `map`).\n    * `thenCompose()`: Chains two dependent asynchronous operations together (like `flatMap`).\n    * `thenCombine()`: Executes two independent asynchronous operations and merges their results.\n    * `exceptionally()`: A callback used specifically for recovering from exceptions in the pipeline."
+            },
+            {
+              "id": "cj-225",
+              "question": "225. What is ForkJoinPool and what is work-stealing?",
+              "answer": "* **225. `ForkJoinPool` & Work-stealing:** A specialized Executor designed for divide-and-conquer algorithms (and parallel streams). It uses a \"work-stealing\" algorithm: if a thread finishes its own tasks, it actively steals pending tasks from the end of other busy threads' queues, keeping all CPU cores fully saturated."
+            },
+            {
+              "id": "cj-226",
+              "question": "226. What is the Java Memory Model?",
+              "answer": "* **226. Java Memory Model:** The formal specification that defines how threads interact with memory. It dictates when changes made by one thread to shared variables become visible to other threads, bridging the gap between Java code and the underlying OS/Hardware CPU caches."
+            },
+            {
+              "id": "cj-227",
+              "question": "227. What is the happens-before relationship?",
+              "answer": "* **227. Happens-Before Relationship:** The core rule of the JMM. If Operation A \"happens-before\" Operation B, the memory effects of A are strictly guaranteed to be visible to B. (e.g., An unlock on a monitor happens-before every subsequent lock on that same monitor)."
+            },
+            {
+              "id": "cj-228",
+              "question": "228. What is visibility problem in multithreading?",
+              "answer": "* **228. Visibility Problem:** Because modern CPUs have L1/L2 caches, a thread might update a shared variable strictly in its local CPU cache. Without synchronization, other threads running on different cores will continue reading stale data from their own caches or main memory."
+            },
+            {
+              "id": "cj-229",
+              "question": "229. How does volatile ensure visibility but not atomicity?",
+              "answer": "* **229. `volatile` (Visibility vs Atomicity):** `volatile` forces all reads and writes of a variable to bypass the CPU cache and go straight to main memory. This solves visibility. It does *not* solve atomicity (e.g., `i++`), because incrementing requires three distinct steps (read, add, write) that can still be interrupted by other threads."
+            },
+            {
+              "id": "cj-230",
+              "question": "230. What are atomic classes (AtomicInteger, AtomicReference) and how do they work (CAS)?",
+              "answer": "* **230. Atomic Classes & CAS:** Classes like `AtomicInteger` provide thread-safe, lock-free operations. Instead of using expensive OS-level locks (`synchronized`), they rely on low-level CPU hardware instructions called Compare-And-Swap."
+            },
+            {
+              "id": "cj-231",
+              "question": "231. What is Compare-And-Swap (CAS)?",
+              "answer": "* **231. Compare-And-Swap (CAS):** An atomic hardware instruction. It updates a variable *only if* the variable's current value in main memory matches an expected value. If another thread changed the value in the meantime, the CAS operation fails, and the thread typically retries the operation in a tight loop (a spin-lock) until it succeeds."
+            }
+          ]
+        },
+        {
+          "id": "generics",
+          "title": "Java Generics",
+          "questions": [
+            {
+              "id": "cj-232",
+              "question": "232. What are generics and what problem do they solve?",
+              "answer": "* **232. Generics & problem solved:** Generics enable types (classes and interfaces) to act as parameters when defining classes, interfaces, and methods. They solve the problem of runtime type unsafety. Prior to generics, retrieving items from collections required explicit casting, often leading to hidden `ClassCastException`s at runtime. Generics shift this validation to compile-time."
+            },
+            {
+              "id": "cj-233",
+              "question": "233. What is type erasure?",
+              "answer": "* **233. Type Erasure:** This is the JVM's mechanism to ensure backward compatibility with pre-Java 5 bytecode. The Java compiler enforces type constraints during compilation, but then completely strips out (erases) all generic type information from the generated `.class` files. At runtime, `List<String>` and `List<Integer>` are both reduced to exactly the same raw `List` class, and type parameters are replaced by `Object` (or their highest bound)."
+            },
+            {
+              "id": "cj-234",
+              "question": "234. What is the difference between List<Object> and List<?>?",
+              "answer": "* **234. `List<Object>` vs `List<?>`:** * `List<Object>` specifically means a list capable of holding absolutely any object. Because generics are invariant, you cannot assign a `List<String>` to a `List<Object>` reference.\n    * `List<?>` is a wildcard list of an *unknown* type. You *can* assign a `List<String>` to it. However, because the compiler has no idea what specific type the list actually holds, it strictly forbids you from `add()`ing any elements to it (except `null`) to guarantee type safety."
+            },
+            {
+              "id": "cj-235",
+              "question": "235. What is an upper bounded wildcard (? extends T) vs lower bounded (? super T)?",
+              "answer": "* **235. Upper bounded (`? extends T`) vs lower bounded (`? super T`):**\n    * **Upper Bounded (`? extends T`):** Accepts type `T` or any of its subclasses. It makes the structure read-only. You can safely read elements as type `T`, but you cannot add elements because the compiler doesn't know *which* subclass it actually is.\n    * **Lower Bounded (`? super T`):** Accepts type `T` or any of its superclasses. It allows you to safely write/add elements of type `T` (or subclasses of `T`) into the structure, but reading from it is mostly restricted to `Object`."
+            },
+            {
+              "id": "cj-236",
+              "question": "236. What is the PECS principle (Producer Extends, Consumer Super)?",
+              "answer": "* **236. PECS Principle:** It stands for **\"Producer Extends, Consumer Super\"**. It is the golden rule for API design with generics. If a collection is producing (supplying) elements for your code to read, use `? extends T`. If the collection is consuming (receiving) elements that your code writes into it, use `? super T`. If it needs to do both, do not use wildcards."
+            },
+            {
+              "id": "cj-237",
+              "question": "237. Can you create a generic array in Java? Why or why not?",
+              "answer": "* **237. Generic Arrays:** No, creating a generic array (e.g., `new T[]` or `new List<String>[10]`) is strictly illegal in Java. Arrays are *covariant* and *reified* (they know and enforce their element type at runtime). Generics are *invariant* and *erased* (they lose their element type at runtime). Mixing them would completely destroy the array's built-in runtime type checking (`ArrayStoreException`), leading to heap pollution."
+            },
+            {
+              "id": "cj-238",
+              "question": "238. What is a generic method vs a generic class?",
+              "answer": "* **238. Generic method vs generic class:** A generic class declares a type parameter at the class definition level (`class Box<T>`), making that type available to its instance variables and instance methods. A generic method defines its own independent type parameter directly in the method signature (`public <U> void print(U item)`). Crucially, a generic method can be `static`, whereas a class-level type parameter `T` cannot be referenced from a static context."
+            },
+            {
+              "id": "cj-239",
+              "question": "239. What is a raw type and why should you avoid it?",
+              "answer": "* **239. Raw Types:** A raw type is the use of a generic class without supplying a type argument (e.g., using `List` instead of `List<String>`). They exist purely for legacy compatibility with pre-Java 5 code. You should absolutely avoid them because they entirely bypass the compiler's type-safety checks, essentially reverting your code to Java 1.4 standards and risking runtime crashes."
+            },
+            {
+              "id": "cj-240",
+              "question": "240. Can you use primitives as generic type parameters?",
+              "answer": "* **240. Primitives as generic type parameters:** No, you cannot (e.g., `List<int>` is invalid). Because of Type Erasure, the compiler replaces generic type parameters with `Object` in the bytecode. Primitive types (`int`, `double`, `boolean`) are not objects and do not inherit from `java.lang.Object`, so they cannot fill that erased slot. You must use their corresponding wrapper classes (`Integer`, `Double`, `Boolean`)."
+            }
+          ]
+        },
+        {
+          "id": "newer-features",
+          "title": "Java Newer Features (Java 9–21)",
+          "questions": [
+            {
+              "id": "cj-241",
+              "question": "241. What is a Record in Java and when would you use it?",
+              "answer": "* **241. What is a Record & Use Case:** A record is a special class type designed specifically to be a transparent, immutable carrier of data. You use it to dramatically reduce boilerplate when creating Data Transfer Objects (DTOs), configuration wrappers, or multiple return values, effectively replacing Lombok's `@Value` annotation."
+            },
+            {
+              "id": "cj-242",
+              "question": "242. What does a record automatically generate?",
+              "answer": "* **242. Auto-generated components:** The compiler automatically generates `private final` fields, a canonical constructor that matches the declaration, public read accessor methods (named exactly after the fields, e.g., `age()`, not `getAge()`), `equals()`, `hashCode()`, and a sensible `toString()` method."
+            },
+            {
+              "id": "cj-243",
+              "question": "243. Can a record extend a class or implement interfaces?",
+              "answer": "* **243. Extending/Implementing:** A record **cannot** extend any class because it implicitly extends `java.lang.Record`. It also cannot be extended (it is implicitly `final`). However, it **can** implement multiple interfaces."
+            },
+            {
+              "id": "cj-244",
+              "question": "244. Can you add custom methods to a record?",
+              "answer": "* **244. Custom methods:** Yes. You can add static methods, custom instance methods, and you can override the constructor using a \"compact constructor\" (which omits the parameter list) specifically to add validation logic before the fields are assigned."
+            },
+            {
+              "id": "cj-245",
+              "question": "245. Can you make a record mutable?",
+              "answer": "* **245. Mutability:** No. The fields of a record are strictly `final`. If you need a mutable object with setters, you must use a standard class. *(Note: If a record holds a reference to a mutable object like a `List`, the contents of the list can be modified, but this is considered a poor practice that breaks the intended immutability contract).*"
+            },
+            {
+              "id": "cj-246",
+              "question": "246. What is a sealed class and what problem does it solve?",
+              "answer": "* **246. Sealed class & problem solved:** A sealed class explicitly restricts which other classes or interfaces are allowed to extend or implement it. It solves the problem of unrestricted inheritance, allowing domain architects to model a strict, closed hierarchy (Domain-Driven Design) and preventing arbitrary third-party extensions."
+            },
+            {
+              "id": "cj-247",
+              "question": "247. What are permits, final, non-sealed, and sealed subclasses?",
+              "answer": "* **247. `permits` and subclass modifiers:** * `permits`: The keyword used in the parent class to list the exact subclasses allowed.\n    * Every permitted subclass *must* explicitly declare exactly one of three modifiers:\n        * `final`: Cannot be extended further.\n        * `sealed`: Can be extended, but strictly restricts its own permitted subclasses.\n        * `non-sealed`: Re-opens the hierarchy, allowing any arbitrary class to extend it."
+            },
+            {
+              "id": "cj-248",
+              "question": "248. How does a sealed class work with pattern matching and switch expressions?",
+              "answer": "* **248. Pattern matching & switch:** Because the compiler knows the exhaustive list of permitted subclasses at compile-time, you can use a sealed class in a `switch` expression without needing a `default` branch. If you cover all permitted subclasses, the compiler guarantees exhaustiveness."
+            },
+            {
+              "id": "cj-249",
+              "question": "249. What is pattern matching for instanceof?",
+              "answer": "* **249. Pattern matching for `instanceof`:** It removes the redundant, boilerplate casting we used to do. Instead of `if (obj instanceof String) { String s = (String) obj; s.toLowerCase(); }`, you simply write `if (obj instanceof String s) { s.toLowerCase(); }`. The variable `s` is automatically cast and scoped to the true branch of the `if` block."
+            },
+            {
+              "id": "cj-250",
+              "question": "250. What is pattern matching in switch (Java 21)?",
+              "answer": "* **250. Pattern matching in switch:** Introduced in Java 21, it allows a `switch` statement to evaluate the *type* of an object, not just its exact value. Example: `switch(obj) { case String s -> ... case Integer i -> ... }`. It replaces massive `if-else-if` chains of `instanceof` checks."
+            },
+            {
+              "id": "cj-251",
+              "question": "251. What are guarded patterns?",
+              "answer": "* **251. Guarded patterns:** A feature in modern switch pattern matching that allows you to add a boolean condition to a case. Using the `when` keyword (Java 21), you can write: `case String s when s.length() > 5 -> ...`. This keeps the switch logic incredibly clean."
+            },
+            {
+              "id": "cj-252",
+              "question": "252. What are text blocks in Java 15+ and when would you use them?",
+              "answer": "* **252. Text Blocks (Java 15+):** Denoted by triple quotes (`\"\"\"`). They allow you to write multi-line strings without manually escaping quotation marks or adding `\\n` concatenations. You should use them strictly when embedding raw JSON, HTML, SQL queries, or XML directly into your Java code."
+            },
+            {
+              "id": "cj-253",
+              "question": "253. What is var (local variable type inference) and what are its limitations?",
+              "answer": "* **253. `var` & limitations:** `var` is used for Local Variable Type Inference. The compiler deduces the type based on the right-hand assignment. **Limitations:** It can *only* be used for local variables inside methods. It cannot be used for class fields, method parameters, or return types. Furthermore, it must be initialized immediately on the same line, and it cannot be initialized to `null` (since the compiler wouldn't know what type `null` represents)."
+            },
+            {
+              "id": "cj-254",
+              "question": "254. What are switch expressions (Java 14+) vs switch statements?",
+              "answer": "* **254. Switch Expressions vs. Statements:** * **Statements (Old):** Execute blocks of code, require manual `break` keywords to prevent fall-through bugs, and don't return values.\n    * **Expressions (New):** Use the arrow syntax (`->`), automatically prevent fall-through (no `break` needed), return a single value, can be directly assigned to a variable, and are checked by the compiler for exhaustiveness."
+            },
+            {
+              "id": "cj-255",
+              "question": "255. What is the difference between String.isBlank() and String.isEmpty()?",
+              "answer": "* **255. `isBlank()` vs `isEmpty()`:** `isEmpty()` purely checks if the string length is exactly 0. `isBlank()` checks if the length is 0 **or** if the string contains *only* whitespace characters (spaces, tabs, newlines). `\"   \".isEmpty()` is false, but `\"   \".isBlank()` is true."
+            },
+            {
+              "id": "cj-256",
+              "question": "256. What are the improvements to NullPointerException messages in Java 14+?",
+              "answer": "* **256. Helpful NullPointerExceptions:** In Java 14+, the JVM natively analyzes the bytecode to tell you exactly *which* variable was null in a chained execution. Instead of just pointing to line 45 (`a.b.c.method()`), the exception message explicitly states: *\"Cannot invoke 'C.method()' because the return value of 'B.getC()' is null\"*. This saves countless hours of debugging."
+            }
+          ]
+        },
+        {
+          "id": "design-principles",
+          "title": "Design Principles (Tested in Java Context)",
+          "questions": [
+            {
+              "id": "cj-257",
+              "question": "257. What are the SOLID principles? Explain each briefly.",
+              "answer": "* **257. The SOLID Principles:** They are a set of five object-oriented design principles aimed at making software more understandable, flexible, and maintainable.\n    * **S** - Single Responsibility Principle (SRP)\n    * **O** - Open/Closed Principle (OCP)\n    * **L** - Liskov Substitution Principle (LSP)\n    * **I** - Interface Segregation Principle (ISP)\n    * **D** - Dependency Inversion Principle (DIP)"
+            },
+            {
+              "id": "cj-258",
+              "question": "258. What is the Single Responsibility Principle and how do you identify a violation?",
+              "answer": "* **258. Single Responsibility Principle & Violations:** SRP states that a class should have one, and only one, reason to change. You identify a violation by looking for \"God classes\" or highly coupled logic. For example, if a `UserService` class contains business logic, raw SQL JDBC calls, and code to format and send welcome emails, it violates SRP. A change in the email template shouldn't force you to modify and recompile the database service."
+            },
+            {
+              "id": "cj-259",
+              "question": "259. What is the Open/Closed Principle? How do interfaces help achieve it?",
+              "answer": "* **259. Open/Closed Principle & Interfaces:** OCP states that a software artifact should be open for extension but closed for modification. Interfaces are the primary tool for this in Java. If a `NotificationSender` depends on a `MessageService` interface, you can add a new `SlackMessageServiceImpl` (extension) without ever touching or modifying the existing `NotificationSender` or `EmailServiceImpl` classes."
+            },
+            {
+              "id": "cj-260",
+              "question": "260. What is the Liskov Substitution Principle and what does it mean practically?",
+              "answer": "* **260. Liskov Substitution Principle (Practically):** LSP states that objects of a parent class must be entirely replaceable by objects of its subclasses without breaking the application. Practically, this means a subclass should never violate the contract established by the parent. The most common violation is implementing an interface method just to throw an `UnsupportedOperationException`, or the classic \"Square extends Rectangle\" problem where setting the height of a Square unexpectedly alters its width, breaking the logic of the client using the Rectangle reference."
+            },
+            {
+              "id": "cj-261",
+              "question": "261. What is the Interface Segregation Principle? Give a bad and good example.",
+              "answer": "* **261. Interface Segregation Principle (Bad vs. Good):** ISP states that clients should not be forced to depend on interfaces they do not use.\n    * *Bad Example:* A monolithic `Worker` interface with `work()`, `eat()`, and `sleep()`. If a `Robot` implements `Worker`, it is forced to implement `eat()` and `sleep()` as empty or exception-throwing methods.\n    * *Good Example:* Segregating the interfaces into `Workable` and `Biological`. A `Human` implements both, while a `Robot` strictly implements `Workable`."
+            },
+            {
+              "id": "cj-262",
+              "question": "262. What is the Dependency Inversion Principle and how does Spring DI apply it?",
+              "answer": "* **262. Dependency Inversion Principle & Spring DI:** DIP states that high-level modules should not depend on low-level modules; both should depend on abstractions. Furthermore, abstractions should not depend on details. Spring achieves this via Inversion of Control (IoC). Instead of an `OrderService` (high-level) explicitly calling `new MySQLPaymentRepository()` (low-level), it declares a dependency on the `PaymentRepository` interface. The Spring container wires (injects) the exact implementation at runtime, completely decoupling the layers."
+            },
+            {
+              "id": "cj-263",
+              "question": "263. What is DRY, KISS, and YAGNI?",
+              "answer": "* **263. DRY, KISS, and YAGNI:**\n    * **DRY (Don't Repeat Yourself):** Avoid code duplication. If you write the same logic twice, abstract it into a reusable method or component.\n    * **KISS (Keep It Simple, Stupid):** Avoid unnecessary complexity. Don't write a clever, unreadable 1-liner when a 4-line standard loop is perfectly clear to the rest of the team.\n    * **YAGNI (You Aren't Gonna Need It):** Do not build complex abstractions, extra database tables, or flexible architectures for hypothetical future features. Build strictly what is required today to avoid maintaining dead, over-engineered code."
+            },
+            {
+              "id": "cj-264",
+              "question": "264. What is cohesion and coupling? What is high cohesion and low coupling?",
+              "answer": "* **264. Cohesion vs. Coupling:**\n    * **Cohesion:** Refers to how closely related and focused the responsibilities of a single module or class are.\n    * **Coupling:** Refers to the degree of direct dependency and knowledge one class has of another.\n    * *Goal:* We strive for **High Cohesion** (a class does exactly one logical thing very well) and **Low Coupling** (classes interact through minimal, well-defined interfaces without knowing each other's internal workings)."
+            },
+            {
+              "id": "cj-265",
+              "question": "265. What is the difference between composition and aggregation?",
+              "answer": "* **265. Composition vs. Aggregation:** Both represent \"HAS-A\" relationships, but they differ in strictness and lifecycle dependency.\n    * **Composition (Strong):** The child object's lifecycle is entirely dependent on the parent. Example: A `House` has `Room`s. If the house is demolished, the rooms cease to exist.\n    * **Aggregation (Weak):** The child object can exist independently of the parent. Example: A `University` has `Professor`s. If the university closes down, the professors still exist and can go elsewhere."
+            },
+            {
+              "id": "cj-266",
+              "question": "266. What is defensive programming?",
+              "answer": "* **266. Defensive Programming:** It is a coding mindset anticipating that external inputs, APIs, and other components *will* fail or behave maliciously. Practices include: strictly validating all method parameters (null checks, range boundaries), returning empty collections instead of `null`s, making objects immutable wherever possible, using `Optional`, and creating defensive copies of mutable references passed into or out of a class."
+            }
+          ]
+        },
+        {
+          "id": "miscellaneous",
+          "title": "Miscellaneous (Frequently Tricky)",
+          "questions": [
+            {
+              "id": "cj-267",
+              "question": "267. What is the contract for equals() in Java?",
+              "answer": "* **267. Contract for `equals()`:** The implementation must be: \n    * **Reflexive:** `x.equals(x)` is true.\n    * **Symmetric:** If `x.equals(y)` is true, `y.equals(x)` must be true.\n    * **Transitive:** If `x.equals(y)` and `y.equals(z)` are true, `x.equals(z)` must be true.\n    * **Consistent:** Multiple invocations consistently return the same result.\n    * **Non-nullity:** `x.equals(null)` must always return `false`."
+            },
+            {
+              "id": "cj-268",
+              "question": "268. What is the contract for hashCode() in Java?",
+              "answer": "* **268. Contract for `hashCode()`:** * It must consistently return the same integer during the same execution of the application, provided no information used in `equals` comparisons is modified.\n    * If two objects are equal according to `equals()`, calling `hashCode()` on both must produce the exact same integer result.\n    * If two objects are *not* equal, they are *not* strictly required to produce different hash codes (though doing so vastly improves performance in hash-based collections)."
+            },
+            {
+              "id": "cj-269",
+              "question": "269. Why must you override hashCode() when you override equals()?",
+              "answer": "* **269. Why override both together:** Hash-based collections (like `HashMap` and `HashSet`) use a two-step retrieval process. First, they use the `hashCode()` to find the correct memory \"bucket.\" Second, they use `equals()` to find the exact object within that bucket. If you override `equals()` to make two objects logically identical but forget to override `hashCode()`, they will likely hash to completely different buckets, and the Map will fail to find the object."
+            },
+            {
+              "id": "cj-270",
+              "question": "270. What happens if two objects are equal but have different hash codes?",
+              "answer": "* **270. Equal objects with different hash codes:** This strictly violates the Java contract. If you put the first object in a `HashSet`, and then try to `.contains()` the second object, the set will return `false` because it will look in the wrong hash bucket entirely."
+            },
+            {
+              "id": "cj-271",
+              "question": "271. What happens if two objects have the same hash code but are not equal?",
+              "answer": "* **271. Same hash code but not equal objects:** This is completely legal and is known as a **hash collision**. The collection handles this by storing both distinct objects in the same bucket (using a linked list or a Red-Black tree). It degrades retrieval performance from O(1) to O(N) or O(log N) for that specific bucket, but the logic of the program remains unbroken."
+            },
+            {
+              "id": "cj-272",
+              "question": "272. What makes a class truly immutable in Java?",
+              "answer": "* **272. Truly immutable class requirements:**\n    1. Declare the class as `final` so it cannot be subclassed (preventing overridden methods from mutating state).\n    2. Make all fields `private` and `final`.\n    3. Do not provide any setter methods.\n    4. Ensure the class cannot be modified via mutable object references (see next point)."
+            },
+            {
+              "id": "cj-273",
+              "question": "273. How do you create an immutable class with a mutable field inside it?",
+              "answer": "* **273. Immutable class with a mutable field:** If your immutable class takes a mutable object (like a `java.util.Date` or a `List`) in its constructor, you must create a **defensive copy** and store the copy, not the original reference. Similarly, if you have a getter for that field, you must return a fresh copy or an unmodifiable view (e.g., `return new Date(this.date.getTime())`). Otherwise, external code can mutate the object's internal state."
+            },
+            {
+              "id": "cj-274",
+              "question": "274. Why is immutability important in concurrent programming?",
+              "answer": "* **274. Immutability in concurrent programming:** Immutable objects are intrinsically thread-safe. Because their state literally cannot be changed after construction, multiple threads can read them simultaneously without any risk of race conditions, eliminating the need for expensive `synchronized` blocks."
+            },
+            {
+              "id": "cj-275",
+              "question": "275. What is the difference between Collections.unmodifiableList() and List.of()?",
+              "answer": "* **275. `Collections.unmodifiableList()` vs `List.of()`:** * `Collections.unmodifiableList()` (Java 1.2+) simply creates a read-only \"wrapper\" view over an existing list. If the underlying original list is modified elsewhere in the code, the unmodifiable view will suddenly reflect those changes.\n    * `List.of()` (Java 9+) creates a completely independent, structurally immutable list. It does not wrap anything, and its contents can never be changed."
+            },
+            {
+              "id": "cj-276",
+              "question": "276. What is the difference between widening and narrowing type conversion?",
+              "answer": "* **276. Widening vs Narrowing:** * **Widening (Implicit):** Converting a smaller primitive to a larger one (e.g., `int` to `long`). The compiler does this automatically because there is no risk of data loss.\n    * **Narrowing (Explicit):** Converting a larger primitive to a smaller one (e.g., `long` to `int`). You must explicitly cast it `(int)` because it can result in a loss of magnitude or precision if the value exceeds the smaller type's limits."
+            },
+            {
+              "id": "cj-277",
+              "question": "277. What is autoboxing and unboxing? What are the performance pitfalls?",
+              "answer": "* **277. Autoboxing/Unboxing & Performance:** Autoboxing is the compiler automatically converting a primitive to its wrapper object (`int` to `Integer`). Unboxing is the reverse. The pitfall occurs in loops: `Integer sum = 0; for(int i=0; i<1000; i++) sum += i;`. Because `Integer` is immutable, autoboxing forces the JVM to silently instantiate 1,000 completely new `Integer` objects on the heap, triggering massive Garbage Collection overhead."
+            },
+            {
+              "id": "cj-278",
+              "question": "278. What is the Integer cache in Java (-128 to 127)?",
+              "answer": "* **278. The Integer Cache:** To save memory, Java pre-caches `Integer` objects for values between -128 and 127.\n    * `Integer a = 100; Integer b = 100; (a == b)` evaluates to **true** (they point to the same cached object).\n    * `Integer x = 200; Integer y = 200; (x == y)` evaluates to **false** (they are completely distinct objects on the heap because 200 is outside the cache range)."
+            },
+            {
+              "id": "cj-279",
+              "question": "279. What is ClassCastException and when does it occur?",
+              "answer": "* **279. `ClassCastException`:** A runtime exception thrown when you attempt to cast an object reference to a type that it is not an instance of. (e.g., extracting an `Object` from a raw list that is actually a `String`, and blindly casting it to an `Integer`)."
+            },
+            {
+              "id": "cj-280",
+              "question": "280. What is the difference between instanceof and getClass() equality check?",
+              "answer": "* **280. `instanceof` vs `getClass()`:** * `instanceof` evaluates to true for the exact class **and all of its subclasses** (it honors polymorphism).\n    * `getClass() == Other.class` is a strict, exact-type check. It returns true *only* if the object is exactly that class, completely ignoring inheritance. (Often used in strict `equals()` implementations)."
+            },
+            {
+              "id": "cj-281",
+              "question": "281. What is serialization in Java?",
+              "answer": "* **281. Serialization in Java:** The process of converting an object's state in memory into a flat byte stream so it can be saved to a file, persisted to a database, or transmitted over a network. Deserialization is the reverse process. The class must implement the `java.io.Serializable` marker interface."
+            },
+            {
+              "id": "cj-282",
+              "question": "282. What is serialVersionUID and why is it important?",
+              "answer": "* **282. `serialVersionUID`:** It acts as a version control number for a serializable class. During deserialization, the JVM compares the ID in the byte stream with the ID of the local class. If they don't match (meaning the class structure was modified after serialization), the JVM immediately throws an `InvalidClassException` instead of silently corrupting the data."
+            },
+            {
+              "id": "cj-283",
+              "question": "283. What is the transient keyword?",
+              "answer": "* **283. The `transient` keyword:** Applying `transient` to a class field tells the JVM to completely ignore that field during the serialization process. When the object is deserialized, that field will be initialized to its default value (`null` for objects, `0` for numeric primitives). It is used to protect sensitive data (like passwords) or to ignore un-serializable state (like active thread references or open database connections)."
+            },
+            {
+              "id": "cj-284",
+              "question": "284. What are the problems with Java's default serialization?",
+              "answer": "* **284. Problems with Java's default serialization:** It is widely considered a failed experiment by modern Java architects. It is extremely slow, produces bloated byte payloads, is highly brittle to class structure changes, and most importantly, it is a massive security risk. Deserializing untrusted byte streams can lead to Remote Code Execution (RCE) via \"gadget chain\" attacks."
+            },
+            {
+              "id": "cj-285",
+              "question": "285. What are alternatives to Java serialization?",
+              "answer": "* **285. Alternatives:** Modern applications should completely avoid native Java serialization in favor of cross-platform, secure formats. Examples include JSON (using Jackson or Gson), Protocol Buffers (Protobuf), Avro, or Kryo."
             }
           ]
         }
